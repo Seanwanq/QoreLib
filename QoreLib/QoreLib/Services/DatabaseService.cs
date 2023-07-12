@@ -6,37 +6,34 @@ using System.Data.SQLite;
 using System.Data;
 using System.IO;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
+using QoreLib.Models;
 
 namespace QoreLib.Services;
 
 public interface IDatabaseService
 {
     ScientificDatabaseContext SciDB { get; set; }
-    
     bool IsDatabaseConnected { get; set; }
-    
     void ConnectScientificDatabase(string folderPath, string dbName);
-
     void CreateAndConnectScientificDatabase(string folderPath, string dbName);
-
     void CloseScientificDatabaseConnection();
+    void AddDataToTestTable(string name, bool isMale);
 }
 
 public class DatabaseService : IDatabaseService
 {
     public ScientificDatabaseContext SciDB { get; set; }
-    
     public bool IsDatabaseConnected { get; set; }
-    
+
     public void ConnectScientificDatabase(string folderPath, string dbName)
     {
-        var url = Path.Combine(folderPath, dbName);
-
+        string url = Path.Combine(folderPath, dbName);
         if (string.IsNullOrWhiteSpace(url) || !File.Exists(url))
         {
             throw new Exception($"Database file {dbName} does not exist.");
         }
-            
+
         try
         {
             SciDB = new ScientificDatabaseContext(folderPath, dbName);
@@ -45,6 +42,32 @@ public class DatabaseService : IDatabaseService
         {
             throw new Exception($"Error connecting the database: {e.Message}");
         }
+
+        SciDB.Database.ExecuteSqlRaw(@"
+CREATE TABLE IF NOT EXISTS SpectrumTable(
+    Id INTEGER PRIMARY KEY AUTOINCREMENT,
+    DataX BLOB NOT NULL,
+    DataY BLOB NOT NULL,
+    Omega01X BLOB,
+    Omega01Y BLOB,
+    Omega12X BLOB,
+    Omega12Y BLOB,
+    Type TEXT NOT NULL,
+    Name TEXT NOT NULL,
+    IsFilled INTEGER NOT NULL,
+    IsUseful INTEGER NOT NULL,
+    CreateTime TEXT NOT NULL,
+    AlterTime TEXT NOT NULL,
+    MarkTime TEXT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS TestTable(
+    Id INTEGER PRIMARY KEY AUTOINCREMENT,
+    Name TEXT NOT NULL,
+    IsMale INTEGER NOT NULL,
+    CreateTime TEXT NOT NULL 
+);
+");
     }
 
     public void CreateAndConnectScientificDatabase(string folderPath, string dbName)
@@ -55,7 +78,8 @@ public class DatabaseService : IDatabaseService
             throw new Exception($"Database {dbName} exists.");
             return;
         }
-        else if(string.IsNullOrWhiteSpace(dbPath) || string.IsNullOrWhiteSpace(folderPath) || string.IsNullOrWhiteSpace(dbName))
+        else if (string.IsNullOrWhiteSpace(dbPath) || string.IsNullOrWhiteSpace(folderPath) ||
+                 string.IsNullOrWhiteSpace(dbName))
         {
             throw new Exception("Please provide a valid database path.");
         }
@@ -67,6 +91,7 @@ public class DatabaseService : IDatabaseService
                 {
                     Directory.CreateDirectory(folderPath);
                 }
+
                 SQLiteConnection.CreateFile(dbPath);
             }
             catch (Exception e)
@@ -82,5 +107,18 @@ public class DatabaseService : IDatabaseService
     {
         SciDB?.Disconnect();
         SciDB = null;
-    } 
+    }
+
+    public void AddDataToTestTable(string name, bool isMale)
+    {
+        try
+        {
+            SciDB.Add(new TestModel { Name = name, IsMale = isMale, CreateTime = DateTime.Now });
+            SciDB.SaveChanges();
+        }
+        catch (Exception e)
+        {
+            throw new Exception($"Error: {e.Message}");
+        }
+    }
 }
