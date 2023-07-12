@@ -1,0 +1,55 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vmp="clr-namespace:QoreLib.ViewModels.PagesViewModels"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="QoreLib.Views.Pages.SQLConfigurationPage"
+             x:DataType="vmp:SQLConfigurationPageViewModel">
+    <Border Padding="20">
+        <ScrollViewer HorizontalScrollBarVisibility="Auto">
+            <StackPanel Spacing="5">
+                <TextBlock Margin="20 0 20 -10">Path to database:</TextBlock>
+                <Grid Margin="10 0 10 0" Background="Transparent">
+                    <Grid ColumnDefinitions="Auto * Auto">
+                        <Grid Grid.Column="0">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBox Width="300" Margin="10" VerticalAlignment="Center"
+                                         Text="{Binding DatabaseFolderPath}">
+                                </TextBox>
+                                <TextBlock Text="/" VerticalAlignment="Center" Margin="0"></TextBlock>
+                                <TextBox Width="150" Margin="10" VerticalAlignment="Center"
+                                         Text="{Binding DatabaseName}">
+                                </TextBox>
+                            </StackPanel>
+                        </Grid>
+                        <Grid Grid.Column="1"></Grid>
+                        <Grid Grid.Column="2">
+                            <StackPanel Orientation="Horizontal">
+                                <Button Content="Connect" VerticalAlignment="Center" Margin="10"
+                                        Command="{Binding ConnectCommand}">
+                                </Button>
+                                <Button Content="Create &amp; Connect" VerticalAlignment="Center" Margin="10"
+                                        Command="{Binding CreateAndConnectDatabaseCommand}"></Button>
+                            </StackPanel>
+                        </Grid>
+                    </Grid>
+                </Grid>
+                <TextBlock Margin="20 0 20 -10">Message:</TextBlock>
+                <Grid Margin="10 0 10 0" Background="Transparent">
+                    <TextBox Margin="10" IsReadOnly="True" Text="{Binding Message}"></TextBox>
+                </Grid>
+                <TextBlock Margin="20 0 20 -10">Data:</TextBlock>
+                <Grid Margin="10 0 10 0" Background="Transparent">
+                    <TextBox Margin="10" IsReadOnly="True" Text="{Binding Data}"></TextBox>
+                </Grid>
+                <Grid Margin="10" Background="Transparent">
+                    <Button VerticalAlignment="Center" Content="Close Connection" Margin="10 0 10 0"
+                            Command="{Binding DisconnectDatabaseCommand}"
+                            Classes="Danger" Theme="{DynamicResource SolidButton}">
+                    </Button>
+                </Grid>
+            </StackPanel>
+        </ScrollViewer>
+    </Border>
+</UserControl>

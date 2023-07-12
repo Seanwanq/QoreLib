@@ -1,0 +1,44 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QoreLib", "QoreLib\QoreLib\QoreLib.csproj", "{23DF08D4-0344-453F-9B13-271C8597B087}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QoreLib.Android", "QoreLib\QoreLib.Android\QoreLib.Android.csproj", "{81EECCB5-B80B-4B49-B20E-F534875CFE53}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QoreLib.Desktop", "QoreLib\QoreLib.Desktop\QoreLib.Desktop.csproj", "{8301A90D-87B2-4689-9A81-69D9E838B347}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QoreLib.iOS", "QoreLib\QoreLib.iOS\QoreLib.iOS.csproj", "{06466CEE-6DD6-4578-A11A-C36A06AB329A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QoreLib.Browser", "QoreLib\QoreLib.Browser\QoreLib.Browser.csproj", "{7CAC0125-F62E-4BF6-8B86-D3945C3CDD12}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{23DF08D4-0344-453F-9B13-271C8597B087}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{23DF08D4-0344-453F-9B13-271C8597B087}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{23DF08D4-0344-453F-9B13-271C8597B087}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{23DF08D4-0344-453F-9B13-271C8597B087}.Release|Any CPU.Build.0 = Release|Any CPU
+		{81EECCB5-B80B-4B49-B20E-F534875CFE53}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{81EECCB5-B80B-4B49-B20E-F534875CFE53}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{81EECCB5-B80B-4B49-B20E-F534875CFE53}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{81EECCB5-B80B-4B49-B20E-F534875CFE53}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{81EECCB5-B80B-4B49-B20E-F534875CFE53}.Release|Any CPU.Build.0 = Release|Any CPU
+		{81EECCB5-B80B-4B49-B20E-F534875CFE53}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{8301A90D-87B2-4689-9A81-69D9E838B347}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8301A90D-87B2-4689-9A81-69D9E838B347}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8301A90D-87B2-4689-9A81-69D9E838B347}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8301A90D-87B2-4689-9A81-69D9E838B347}.Release|Any CPU.Build.0 = Release|Any CPU
+		{06466CEE-6DD6-4578-A11A-C36A06AB329A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{06466CEE-6DD6-4578-A11A-C36A06AB329A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{06466CEE-6DD6-4578-A11A-C36A06AB329A}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{06466CEE-6DD6-4578-A11A-C36A06AB329A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{06466CEE-6DD6-4578-A11A-C36A06AB329A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{06466CEE-6DD6-4578-A11A-C36A06AB329A}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{7CAC0125-F62E-4BF6-8B86-D3945C3CDD12}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7CAC0125-F62E-4BF6-8B86-D3945C3CDD12}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7CAC0125-F62E-4BF6-8B86-D3945C3CDD12}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7CAC0125-F62E-4BF6-8B86-D3945C3CDD12}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,74 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:QoreLib.ViewModels"
+             xmlns:viewc="clr-namespace:QoreLib.Views.Controls"
+             xmlns:viewp="clr-namespace:QoreLib.Views.Pages"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="QoreLib.Views.MainView"
+             x:DataType="vm:MainViewModel">
+    
+  <Grid RowDefinitions="70 *">
+    <Grid Grid.Row="0" Background="White">
+      <Border BorderThickness="0 0 0 1">
+        <Border.BorderBrush>
+          <SolidColorBrush Color="Black" Opacity="0.1"></SolidColorBrush>
+        </Border.BorderBrush>
+        <viewc:TopBar></viewc:TopBar>
+      </Border>
+    </Grid>
+    <Grid Grid.Row="1" Background="Transparent">
+      <SplitView CompactPaneLength="0"
+                 OpenPaneLength="200"
+                 DisplayMode="CompactInline"
+                 PanePlacement="Left"
+                 IsPaneOpen="{Binding IsLeftBarOpen}"
+                 PaneBackground="Transparent"
+                 Background="Transparent"
+                 >
+        <SplitView.Pane>
+          <viewc:SideBarLeft IsVisible="True"></viewc:SideBarLeft>
+        </SplitView.Pane>
+        <SplitView.Content>
+          <Grid Background="White" >
+            <Grid.RowDefinitions>
+              <RowDefinition Height="*"></RowDefinition>
+              <RowDefinition Height="{Binding BottomBarHeight}"></RowDefinition>
+            </Grid.RowDefinitions>
+            <Border Grid.Row="0" Grid.RowSpan="2" Background="Transparent" Padding="40" ZIndex="2" IsVisible="False">
+              <viewc:DataPopUp></viewc:DataPopUp>
+            </Border>
+            <Grid Grid.Row="0" ZIndex="1">
+              <SplitView CompactPaneLength="0"
+                         OpenPaneLength="200"
+                         DisplayMode="CompactInline"
+                         PanePlacement="Right"
+                         IsPaneOpen="{Binding IsRightBarOpen}"
+                         PaneBackground="Transparent"
+                         Background="Transparent"
+                         >
+                <SplitView.Pane>
+                  <viewc:SideBarRight></viewc:SideBarRight>
+                </SplitView.Pane>
+                <SplitView.Content>
+                  <Grid Background="Transparent">
+                    <viewp:SQLConfigurationPage></viewp:SQLConfigurationPage>
+                  </Grid>
+                </SplitView.Content>
+              </SplitView>
+            </Grid>
+            <Grid Grid.Row="1" Background="Transparent" ZIndex="1">
+              <Border BorderThickness="0 1 0 0" >
+                <Border.BorderBrush>
+                  <SolidColorBrush Color="Black" Opacity="0.1"></SolidColorBrush>
+                </Border.BorderBrush>
+                <viewc:BottomBar></viewc:BottomBar>
+              </Border>
+            </Grid>
+          </Grid>
+        </SplitView.Content>
+      </SplitView>
+    </Grid>
+  </Grid>
+</UserControl>

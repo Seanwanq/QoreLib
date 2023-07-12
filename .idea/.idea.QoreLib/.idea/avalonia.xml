@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AvaloniaProject">
+    <option name="projectPerEditor">
+      <map>
+        <entry key="QoreLib/QoreLib/App.axaml" value="QoreLib/QoreLib.Browser/QoreLib.Browser.csproj" />
+        <entry key="QoreLib/QoreLib/Views/Controls/BottomBar.axaml" value="QoreLib/QoreLib.Browser/QoreLib.Browser.csproj" />
+        <entry key="QoreLib/QoreLib/Views/Controls/DataPopUp.axaml" value="QoreLib/QoreLib.Browser/QoreLib.Browser.csproj" />
+        <entry key="QoreLib/QoreLib/Views/Controls/SideBarLeft.axaml" value="QoreLib/QoreLib.Browser/QoreLib.Browser.csproj" />
+        <entry key="QoreLib/QoreLib/Views/Controls/SideBarRight.axaml" value="QoreLib/QoreLib.Browser/QoreLib.Browser.csproj" />
+        <entry key="QoreLib/QoreLib/Views/Controls/TopBar.axaml" value="QoreLib/QoreLib.Browser/QoreLib.Browser.csproj" />
+        <entry key="QoreLib/QoreLib/Views/MainView.axaml" value="QoreLib/QoreLib.Browser/QoreLib.Browser.csproj" />
+        <entry key="QoreLib/QoreLib/Views/MainWindow.axaml" value="QoreLib/QoreLib.Browser/QoreLib.Browser.csproj" />
+        <entry key="QoreLib/QoreLib/Views/Pages/DataPlotPage.axaml" value="QoreLib/QoreLib.Browser/QoreLib.Browser.csproj" />
+        <entry key="QoreLib/QoreLib/Views/Pages/HomePage.axaml" value="QoreLib/QoreLib.Browser/QoreLib.Browser.csproj" />
+        <entry key="QoreLib/QoreLib/Views/Pages/SQLConfigurationPage.axaml" value="QoreLib/QoreLib.Browser/QoreLib.Browser.csproj" />
+      </map>
+    </option>
+  </component>
+</project>

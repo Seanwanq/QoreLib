@@ -1,0 +1,10 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vmp="clr-namespace:QoreLib.ViewModels.PagesViewModels"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="QoreLib.Views.Pages.DataPlotPage"
+             x:DataType="vmp:DataPlotPageViewModel">
+    Welcome to Avalonia!
+</UserControl>

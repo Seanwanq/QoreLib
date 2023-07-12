@@ -1,0 +1,29 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:views="clr-namespace:QoreLib.Views"
+        xmlns:vm="clr-namespace:QoreLib.ViewModels"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="QoreLib.Views.MainWindow"
+        Icon="/Assets/avalonia-logo.ico"
+        Title="{Binding Title}"
+        TransparencyLevelHint="AcrylicBlur"
+        Background="Transparent"
+        x:DataType="vm:MainWindowViewModel">
+    <!-- <views:MainView /> -->
+    <Panel>
+        <ExperimentalAcrylicBorder IsHitTestVisible="False">
+            <ExperimentalAcrylicBorder.Material>
+                <ExperimentalAcrylicMaterial 
+                    BackgroundSource="Digger"
+                    TintColor="{Binding TintColor}"
+                    TintOpacity="1"
+                    MaterialOpacity="0.65"
+                    >
+                </ExperimentalAcrylicMaterial>
+            </ExperimentalAcrylicBorder.Material>
+        </ExperimentalAcrylicBorder>
+        <views:MainView></views:MainView>
+    </Panel>
+</Window>
