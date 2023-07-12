@@ -105,4 +105,40 @@ public partial class SQLConfigurationPageViewModel : PageViewModelBase
             Message = e.Message;
         }
     }
+
+    [ObservableProperty] private string _testTableName;
+
+    [ObservableProperty] private bool _testTableIsMale = true;
+
+    [ObservableProperty] private int _testTableBoolIndex = 0;
+
+    partial void OnTestTableBoolIndexChanged(int value)
+    {
+        Message = TestTableBoolIndex.ToString();
+        if (TestTableBoolIndex == 0)
+        {
+            TestTableIsMale = true;
+        }
+        else if (TestTableBoolIndex == 1)
+        {
+            TestTableIsMale = false;
+        }
+    }
+
+    [RelayCommand]
+    private void AddDataToTestTable()
+    {
+        try
+        {
+            _databaseService.AddDataToTestTable(TestTableName, TestTableIsMale);
+            Message = "Data Added.";
+            TestTableName = null;
+            TestTableBoolIndex = 0;
+            TestTableIsMale = true;
+        }
+        catch(Exception e)
+        {
+            Message = e.Message;
+        }
+    }
 }

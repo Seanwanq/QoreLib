@@ -14,7 +14,7 @@
                     <Grid ColumnDefinitions="Auto * Auto">
                         <Grid Grid.Column="0">
                             <StackPanel Orientation="Horizontal">
-                                <TextBox Width="300" Margin="10" VerticalAlignment="Center"
+                                <TextBox Width="330" Margin="10" VerticalAlignment="Center"
                                          Text="{Binding DatabaseFolderPath}">
                                 </TextBox>
                                 <TextBlock Text="/" VerticalAlignment="Center" Margin="0"></TextBlock>
@@ -49,6 +49,27 @@
                             Classes="Danger" Theme="{DynamicResource SolidButton}">
                     </Button>
                 </Grid>
+                <Rectangle Height="1" StrokeThickness="1">
+                    <Rectangle.Stroke>Black</Rectangle.Stroke>
+                    <Rectangle.Opacity>0.2</Rectangle.Opacity>
+                </Rectangle>
+                <Grid Margin="15 0 15 0" 
+                      ColumnDefinitions="* *"
+                      Background="Transparent">
+                    <TextBox Watermark="Name" 
+                             Margin="5"
+                             Text="{Binding TestTableName}"></TextBox>
+                    <ComboBox Grid.Column="1" 
+                              Margin="5"
+                              PlaceholderText="Male?" SelectedIndex="{Binding TestTableBoolIndex}">
+                        <ComboBoxItem>Male</ComboBoxItem>
+                        <ComboBoxItem>Female</ComboBoxItem>
+                    </ComboBox>
+                </Grid>
+                <Button Content="Add Data" 
+                        Margin="20 10 20 10"
+                        Command="{Binding AddDataToTestTableCommand}"></Button>
+                
             </StackPanel>
         </ScrollViewer>
     </Border>
