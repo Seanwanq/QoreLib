@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vmp="clr-namespace:QoreLib.ViewModels.PagesViewModels"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="QoreLib.Views.Pages.SQLConfigurationPage"
+             x:Class="QoreLib.Views.PagesViews.SQLConfigurationPageView"
              x:DataType="vmp:SQLConfigurationPageViewModel">
     <Border Padding="20">
         <ScrollViewer HorizontalScrollBarVisibility="Auto">

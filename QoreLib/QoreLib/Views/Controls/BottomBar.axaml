@@ -7,6 +7,6 @@
              x:Class="QoreLib.Views.Controls.BottomBar"
              x:DataType="cvm:BottomBarViewModel">
     <Grid Background="Transparent">
-        <TextBlock>Bottom Bar</TextBlock>
+        <TextBlock Text="{Binding Greeting}"></TextBlock>
     </Grid>
 </UserControl>

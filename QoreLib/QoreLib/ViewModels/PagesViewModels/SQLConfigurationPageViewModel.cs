@@ -11,9 +11,9 @@ namespace QoreLib.ViewModels.PagesViewModels;
 
 public partial class SQLConfigurationPageViewModel : PageViewModelBase
 {
-    private readonly IDatabaseService _databaseService;
+    private readonly IDatabaseService? _databaseService;
 
-    public SQLConfigurationPageViewModel(IDatabaseService databaseService)
+    public SQLConfigurationPageViewModel(IDatabaseService? databaseService)
     {
         IsActive = true;
         _databaseService = databaseService;
@@ -141,7 +141,14 @@ public partial class SQLConfigurationPageViewModel : PageViewModelBase
         catch(Exception e)
         {
             ErrorMessage = e.Message;
-            _databaseService.ConnectScientificDatabase(DatabaseFolderPath, DatabaseName);
+            try
+            {
+                _databaseService.ConnectScientificDatabase(DatabaseFolderPath, DatabaseName);
+            }
+            catch (Exception e2)
+            {
+                ErrorMessage = e2.Message;
+            }
         }
     }
 }

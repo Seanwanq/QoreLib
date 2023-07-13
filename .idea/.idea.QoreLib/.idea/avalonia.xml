@@ -14,6 +14,10 @@
         <entry key="QoreLib/QoreLib/Views/Pages/DataPlotPage.axaml" value="QoreLib/QoreLib.Browser/QoreLib.Browser.csproj" />
         <entry key="QoreLib/QoreLib/Views/Pages/HomePage.axaml" value="QoreLib/QoreLib.Browser/QoreLib.Browser.csproj" />
         <entry key="QoreLib/QoreLib/Views/Pages/SQLConfigurationPage.axaml" value="QoreLib/QoreLib.Browser/QoreLib.Browser.csproj" />
+        <entry key="QoreLib/QoreLib/Views/PagesView/DataPlotPageView.axaml" value="QoreLib/QoreLib.Browser/QoreLib.Browser.csproj" />
+        <entry key="QoreLib/QoreLib/Views/PagesViews/DataPlotPageView.axaml" value="QoreLib/QoreLib.Browser/QoreLib.Browser.csproj" />
+        <entry key="QoreLib/QoreLib/Views/PagesViews/HomePageView.axaml" value="QoreLib/QoreLib.Browser/QoreLib.Browser.csproj" />
+        <entry key="QoreLib/QoreLib/Views/PagesViews/SQLConfigurationPageView.axaml" value="QoreLib/QoreLib.Browser/QoreLib.Browser.csproj" />
       </map>
     </option>
   </component>

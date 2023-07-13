@@ -2,12 +2,13 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:local="using:QoreLib"
              xmlns:vm="clr-namespace:QoreLib.ViewModels"
              xmlns:viewc="clr-namespace:QoreLib.Views.Controls"
-             xmlns:viewp="clr-namespace:QoreLib.Views.Pages"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="QoreLib.Views.MainView"
              x:DataType="vm:MainViewModel">
+  
     
   <Grid RowDefinitions="70 *">
     <Grid Grid.Row="0" Background="White">
@@ -53,7 +54,8 @@
                 </SplitView.Pane>
                 <SplitView.Content>
                   <Grid Background="Transparent">
-                    <viewp:SQLConfigurationPage></viewp:SQLConfigurationPage>
+                    <!-- <viewp:SQLConfigurationPage></viewp:SQLConfigurationPage> -->
+                    <TransitioningContentControl Content="{Binding CurrentPage}"></TransitioningContentControl>
                   </Grid>
                 </SplitView.Content>
               </SplitView>

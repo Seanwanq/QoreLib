@@ -1,4 +1,6 @@
-﻿namespace QoreLib.ViewModels.ControlsViewModels;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+
+namespace QoreLib.ViewModels.ControlsViewModels;
 
 public partial class BottomBarViewModel : BarViewModelBase
 {
@@ -6,4 +8,6 @@ public partial class BottomBarViewModel : BarViewModelBase
     {
         IsActive = true;
     }
+
+    [ObservableProperty] private string _greeting = "hello world";
 }

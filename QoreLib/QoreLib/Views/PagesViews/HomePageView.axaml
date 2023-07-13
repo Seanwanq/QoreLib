@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vmp="clr-namespace:QoreLib.ViewModels.PagesViewModels"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="QoreLib.Views.Pages.DataPlotPage"
-             x:DataType="vmp:DataPlotPageViewModel">
+             x:Class="QoreLib.Views.PagesViews.HomePageView"
+             x:DataType="vmp:HomePageViewModel">
     Welcome to Avalonia!
 </UserControl>

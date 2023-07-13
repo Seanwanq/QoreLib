@@ -1,15 +1,13 @@
-﻿using Avalonia;
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 using QoreLib.ViewModels.PagesViewModels;
 
-namespace QoreLib.Views.Pages;
+namespace QoreLib.Views.PagesViews;
 
-public partial class HomePage : UserControl
+public partial class DataPlotPageView : UserControl
 {
-    public HomePage()
+    public DataPlotPageView()
     {
-        DataContext = new HomePageViewModel();
         InitializeComponent();
     }
 
