@@ -29,6 +29,8 @@ public partial class SQLConfigurationPageViewModel : PageViewModelBase
     [ObservableProperty] private string _databaseName;
 
     [ObservableProperty] private string _message;
+
+    [ObservableProperty] private string _errorMessage;
     
     [ObservableProperty] private string _data;
 
@@ -42,7 +44,7 @@ public partial class SQLConfigurationPageViewModel : PageViewModelBase
         }
         catch (Exception e)
         {
-            Message = e.Message;
+            ErrorMessage = e.Message;
         }
     }
 
@@ -88,7 +90,7 @@ public partial class SQLConfigurationPageViewModel : PageViewModelBase
         }
         catch (Exception e)
         {
-            Message = e.Message;
+            ErrorMessage = e.Message;
         }
     }
 
@@ -102,7 +104,7 @@ public partial class SQLConfigurationPageViewModel : PageViewModelBase
         }
         catch (Exception e)
         {
-            Message = e.Message;
+            ErrorMessage = e.Message;
         }
     }
 
@@ -138,7 +140,8 @@ public partial class SQLConfigurationPageViewModel : PageViewModelBase
         }
         catch(Exception e)
         {
-            Message = e.Message;
+            ErrorMessage = e.Message;
+            _databaseService.ConnectScientificDatabase(DatabaseFolderPath, DatabaseName);
         }
     }
 }
