@@ -10,6 +10,7 @@
         Title="{Binding Title}"
         TransparencyLevelHint="AcrylicBlur"
         Background="Transparent"
+        MinWidth="1250"
         x:DataType="vm:MainWindowViewModel">
     <!-- <views:MainView /> -->
     <Panel>

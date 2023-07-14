@@ -30,15 +30,12 @@ public partial class SideBarLeftViewModel : BarViewModelBase
         {
             case 0:
                 PageIndex = 0;
-                Greeting = "123";
                 break;
             case 1:
                 PageIndex = 1;
-                Greeting = "345";
                 break;
             case 2:
                 PageIndex = 2;
-                Greeting = "789";
                 break;
         }
     }

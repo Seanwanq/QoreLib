@@ -99,7 +99,7 @@ public partial class SQLConfigurationPageViewModel : PageViewModelBase
     {
         try
         {
-            _databaseService.CloseScientificDatabaseConnection();
+            _databaseService?.CloseScientificDatabaseConnection();
             Message = $"Database {DatabaseName} has been closed.";
         }
         catch (Exception e)
@@ -108,7 +108,7 @@ public partial class SQLConfigurationPageViewModel : PageViewModelBase
         }
     }
 
-    [ObservableProperty] private string _testTableName;
+    [ObservableProperty] private string? _testTableName;
 
     [ObservableProperty] private bool _testTableIsMale = true;
 
@@ -132,7 +132,7 @@ public partial class SQLConfigurationPageViewModel : PageViewModelBase
     {
         try
         {
-            _databaseService.AddDataToTestTable(TestTableName, TestTableIsMale);
+            _databaseService?.AddDataToTestTable(TestTableName, TestTableIsMale);
             Message = "Data Added.";
             TestTableName = null;
             TestTableBoolIndex = 0;
@@ -143,7 +143,7 @@ public partial class SQLConfigurationPageViewModel : PageViewModelBase
             ErrorMessage = e.Message;
             try
             {
-                _databaseService.ConnectScientificDatabase(DatabaseFolderPath, DatabaseName);
+                _databaseService?.ConnectScientificDatabase(DatabaseFolderPath, DatabaseName);
             }
             catch (Exception e2)
             {

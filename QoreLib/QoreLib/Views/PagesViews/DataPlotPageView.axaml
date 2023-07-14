@@ -3,8 +3,54 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vmp="clr-namespace:QoreLib.ViewModels.PagesViewModels"
+             xmlns:viewc="clr-namespace:QoreLib.Views.Controls"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="QoreLib.Views.PagesViews.DataPlotPageView"
              x:DataType="vmp:DataPlotPageViewModel">
-    Data plot page
+    <Border Padding="15">
+        <Grid ColumnDefinitions="* Auto" RowDefinitions="Auto *">
+            <Grid Grid.Row="0" Grid.Column="0" Margin="5">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="5">
+                    <Button>btn1</Button>
+                    <Button>btn2</Button>
+                    <Button>btn3</Button>
+                    <Button>btn4</Button>
+                </StackPanel>
+                <StackPanel Grid.Column="1" HorizontalAlignment="Center" Background="Transparent" Orientation="Horizontal"
+                            Spacing="5"
+                            >
+                    <TextBox Width="80"></TextBox>
+                    <TextBox Width="150"></TextBox>
+                    <Button>Goto</Button>
+                </StackPanel>
+                <StackPanel Grid.Column="2" Background="Transparent" Orientation="Horizontal" Spacing="5">
+                    <Button>btn5</Button>
+                    <Button>btn6</Button>
+                </StackPanel>
+            </Grid>
+            <Grid Grid.Row="1" Grid.Column="0" Margin="5">
+                <viewc:ChartControl></viewc:ChartControl>
+            </Grid>
+            <Grid Grid.Row="1" Grid.Column="1" Margin="5">
+                <StackPanel Spacing="5" VerticalAlignment="Center">
+                    <Border Theme="{StaticResource RadioButtonGroupBorder}">
+                        <StackPanel Spacing="0">
+                            <RadioButton x:Name="w01RadioButton" IsChecked="{Binding IsW01Selected}" Theme="{DynamicResource ButtonRadioButton}">
+                                ω01
+                            </RadioButton>
+                            <RadioButton x:Name="w12RadioButton" IsChecked="{Binding IsW12Selected}" Theme="{DynamicResource ButtonRadioButton}">
+                                ω12
+                            </RadioButton>
+                        </StackPanel>
+                    </Border>
+                    <Button Command="{Binding ClearPointsCommand}" Classes="Warning">Clear Points</Button>
+                </StackPanel>
+            </Grid>
+        </Grid>
+    </Border>
 </UserControl>

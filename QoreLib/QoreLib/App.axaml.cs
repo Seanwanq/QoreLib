@@ -3,7 +3,6 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using Microsoft.Extensions.DependencyInjection;
 using QoreLib.Services;
-using QoreLib.ViewModels;
 using QoreLib.Views;
 
 namespace QoreLib;

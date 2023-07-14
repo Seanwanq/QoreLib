@@ -5,6 +5,7 @@
       <map>
         <entry key="QoreLib/QoreLib/App.axaml" value="QoreLib/QoreLib.Browser/QoreLib.Browser.csproj" />
         <entry key="QoreLib/QoreLib/Views/Controls/BottomBar.axaml" value="QoreLib/QoreLib.Browser/QoreLib.Browser.csproj" />
+        <entry key="QoreLib/QoreLib/Views/Controls/ChartControl.axaml" value="QoreLib/QoreLib.Browser/QoreLib.Browser.csproj" />
         <entry key="QoreLib/QoreLib/Views/Controls/DataPopUp.axaml" value="QoreLib/QoreLib.Browser/QoreLib.Browser.csproj" />
         <entry key="QoreLib/QoreLib/Views/Controls/SideBarLeft.axaml" value="QoreLib/QoreLib.Browser/QoreLib.Browser.csproj" />
         <entry key="QoreLib/QoreLib/Views/Controls/SideBarRight.axaml" value="QoreLib/QoreLib.Browser/QoreLib.Browser.csproj" />

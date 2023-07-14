@@ -55,7 +55,12 @@
                 <SplitView.Content>
                   <Grid Background="Transparent">
                     <!-- <viewp:SQLConfigurationPage></viewp:SQLConfigurationPage> -->
-                    <TransitioningContentControl Content="{Binding CurrentPage}"></TransitioningContentControl>
+                    <TransitioningContentControl Content="{Binding CurrentPage}">
+                      <TransitioningContentControl.PageTransition>
+                        <!-- <PageSlide Orientation="Vertical" Duration="0:00:00.200"></PageSlide> -->
+                        <CrossFade Duration="0:00:00.100" ></CrossFade>
+                      </TransitioningContentControl.PageTransition>
+                    </TransitioningContentControl>
                   </Grid>
                 </SplitView.Content>
               </SplitView>

@@ -13,17 +13,17 @@ namespace QoreLib.Services;
 
 public interface IDatabaseService
 {
-    ScientificDatabaseContext SciDB { get; set; }
+    ScientificDatabaseContext? SciDB { get; set; }
     bool IsDatabaseConnected { get; set; }
     void ConnectScientificDatabase(string folderPath, string dbName);
     void CreateAndConnectScientificDatabase(string folderPath, string dbName);
     void CloseScientificDatabaseConnection();
-    void AddDataToTestTable(string name, bool isMale);
+    void AddDataToTestTable(string? name, bool isMale);
 }
 
 public class DatabaseService : IDatabaseService
 {
-    public ScientificDatabaseContext SciDB { get; set; }
+    public ScientificDatabaseContext? SciDB { get; set; }
     public bool IsDatabaseConnected { get; set; }
 
     public void ConnectScientificDatabase(string folderPath, string dbName)
@@ -43,7 +43,7 @@ public class DatabaseService : IDatabaseService
             throw new Exception($"Error connecting the database: {e.Message}");
         }
 
-        SciDB.Database.ExecuteSqlRaw(@"
+        SciDB.Database.ExecuteSqlRaw($@"
 CREATE TABLE IF NOT EXISTS SpectrumTable(
     Id INTEGER PRIMARY KEY AUTOINCREMENT,
     DataX BLOB NOT NULL,
@@ -76,7 +76,6 @@ CREATE TABLE IF NOT EXISTS TestTable(
         if (System.IO.File.Exists(dbPath))
         {
             throw new Exception($"Database {dbName} exists.");
-            return;
         }
         else if (string.IsNullOrWhiteSpace(dbPath) || string.IsNullOrWhiteSpace(folderPath) ||
                  string.IsNullOrWhiteSpace(dbName))
@@ -109,12 +108,12 @@ CREATE TABLE IF NOT EXISTS TestTable(
         SciDB = null;
     }
 
-    public void AddDataToTestTable(string name, bool isMale)
+    public void AddDataToTestTable(string? name, bool isMale)
     {
         try
         {
-            SciDB.Add(new TestModel { Name = name, IsMale = isMale, CreateTime = DateTime.Now });
-            SciDB.SaveChanges();
+            SciDB?.Add(new TestModel { Name = name, IsMale = isMale, CreateTime = DateTime.Now });
+            SciDB?.SaveChanges();
         }
         catch (Exception e)
         {
