@@ -46,19 +46,18 @@ public class DatabaseService : IDatabaseService
         SciDB.Database.ExecuteSqlRaw($@"
 CREATE TABLE IF NOT EXISTS SpectrumTable(
     Id INTEGER PRIMARY KEY AUTOINCREMENT,
-    DataX BLOB NOT NULL,
-    DataY BLOB NOT NULL,
-    Omega01X BLOB,
-    Omega01Y BLOB,
-    Omega12X BLOB,
-    Omega12Y BLOB,
+    GroupId INTEGER NOT NULL,
+    DataFile TEXT NOT NULL,
+    Omega01File TEXT,
+    Omega12File TEXT,
+    APP TEXT NOT NULL,
     Type TEXT NOT NULL,
     Name TEXT NOT NULL,
     IsFilled INTEGER NOT NULL,
-    IsUseful INTEGER NOT NULL,
+    IsUseful INTEGER,
     CreateTime TEXT NOT NULL,
     AlterTime TEXT NOT NULL,
-    MarkTime TEXT NOT NULL
+    MarkTime TEXT
 );
 
 CREATE TABLE IF NOT EXISTS TestTable(
