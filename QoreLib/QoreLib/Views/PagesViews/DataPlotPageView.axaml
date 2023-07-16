@@ -21,9 +21,9 @@
                     <Button>btn3</Button>
                     <Button>btn4</Button>
                 </StackPanel>
-                <StackPanel Grid.Column="1" HorizontalAlignment="Center" Background="Transparent" Orientation="Horizontal"
-                            Spacing="5"
-                            >
+                <StackPanel Grid.Column="1" HorizontalAlignment="Center" Background="Transparent"
+                            Orientation="Horizontal"
+                            Spacing="5">
                     <TextBox Width="80"></TextBox>
                     <TextBox Width="150"></TextBox>
                     <Button>Goto</Button>
@@ -40,11 +40,29 @@
                 <StackPanel Spacing="5" VerticalAlignment="Center">
                     <Border Theme="{StaticResource RadioButtonGroupBorder}">
                         <StackPanel Spacing="0">
-                            <RadioButton x:Name="w01RadioButton" IsChecked="{Binding IsW01Selected}" Theme="{DynamicResource ButtonRadioButton}">
-                                ω01
+                            <RadioButton x:Name="w01RadioButton" IsChecked="{Binding IsW01Selected}"
+                                         HorizontalContentAlignment="Left"
+                                         Theme="{DynamicResource ButtonRadioButton}">
+                                <StackPanel Orientation="Horizontal" Spacing="5">
+                                    <Border Width="10" Height="10" VerticalAlignment="Center" CornerRadius="10"
+                                            Background="LimeGreen">
+                                    </Border>
+                                    <TextBlock VerticalAlignment="Center">
+                                        ω01
+                                    </TextBlock>
+                                </StackPanel>
                             </RadioButton>
-                            <RadioButton x:Name="w12RadioButton" IsChecked="{Binding IsW12Selected}" Theme="{DynamicResource ButtonRadioButton}">
-                                ω12
+                            <RadioButton x:Name="w12RadioButton" IsChecked="{Binding IsW12Selected}"
+                                         HorizontalContentAlignment="Left"
+                                         Theme="{DynamicResource ButtonRadioButton}">
+                                <StackPanel Orientation="Horizontal" Spacing="5">
+                                    <Border Width="10" Height="10" VerticalAlignment="Center" CornerRadius="10"
+                                            Background="BlueViolet">
+                                    </Border>
+                                    <TextBlock VerticalAlignment="Center">
+                                        ω12
+                                    </TextBlock>
+                                </StackPanel>
                             </RadioButton>
                         </StackPanel>
                     </Border>

@@ -35,11 +35,19 @@ public partial class ChartViewModel : ViewModelBase
                 },
                 Fill = null,
                 GeometrySize = 5,
+                GeometryFill = null,
+                GeometryStroke = null,
                 LineSmoothness = 1,
-                Stroke = new SolidColorPaint { Color = SKColors.Blue, StrokeThickness = 1 }
+                Stroke = new SolidColorPaint { Color = SKColors.DodgerBlue, StrokeThickness = 1 }
             },
-            new ScatterSeries<ObservablePoint> { Values = W01Points, },
-            new ScatterSeries<ObservablePoint> { Values = W12Points, }
+            new ScatterSeries<ObservablePoint>
+            {
+                Values = W01Points, GeometrySize = 10, Fill = new SolidColorPaint(SKColors.LimeGreen)
+            },
+            new ScatterSeries<ObservablePoint>
+            {
+                Values = W12Points, GeometrySize = 10, Fill = new SolidColorPaint(SKColors.BlueViolet)
+            }
         };
     }
 

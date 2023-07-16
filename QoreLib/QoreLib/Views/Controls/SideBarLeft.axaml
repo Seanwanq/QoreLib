@@ -15,10 +15,11 @@
                         <Button 
                                 Command="{Binding Command}"
                                 CommandParameter="{Binding Parameter}"
+                                HorizontalContentAlignment="Left"
                                 >
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock>1</TextBlock>
-                                <TextBlock Text="{Binding Content}" Foreground="Black"></TextBlock>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                                <Grid Width="30"></Grid>
+                                <TextBlock Text="{Binding Content}" Foreground="Black" HorizontalAlignment="Left"></TextBlock>
                             </StackPanel>
                         </Button>
                     </Border>

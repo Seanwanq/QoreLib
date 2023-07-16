@@ -18,9 +18,9 @@ public partial class SideBarLeftViewModel : BarViewModelBase
     public SideBarLeftViewModel()
     {
         IsActive = true;
-        Buttons.Add(new SideBarButtonViewModel("按钮1", SideBarButtonClickedCommand, 0));
-        Buttons.Add(new SideBarButtonViewModel("按钮2", SideBarButtonClickedCommand, 1));
-        Buttons.Add(new SideBarButtonViewModel("按钮3", SideBarButtonClickedCommand, 2));
+        Buttons.Add(new SideBarButtonViewModel("Welcome", SideBarButtonClickedCommand, 0));
+        Buttons.Add(new SideBarButtonViewModel("SQL Connection", SideBarButtonClickedCommand, 1));
+        Buttons.Add(new SideBarButtonViewModel("Plot", SideBarButtonClickedCommand, 2));
     }
 
     [RelayCommand]
