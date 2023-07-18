@@ -7,7 +7,11 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:DataType="cvm:ChartViewModel"
              x:Class="QoreLib.Views.Controls.ChartControl">
-    <Grid Background="Transparent" RowDefinitions="* Auto Auto">
-        <lvc:CartesianChart x:Name="Chart" Series="{Binding Series}" PointerPressed="ChartPointerPressed"></lvc:CartesianChart>
+    <Grid Background="Transparent" RowDefinitions="* Auto">
+        <lvc:CartesianChart x:Name="Chart" 
+                            ZoomMode="None"
+                            TooltipPosition="Hidden"
+                            Series="{Binding Series}" PointerPressed="ChartPointerPressed">
+        </lvc:CartesianChart>
     </Grid>
 </UserControl>

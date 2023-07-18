@@ -7,6 +7,9 @@
              x:Class="QoreLib.Views.Controls.BottomBar"
              x:DataType="cvm:BottomBarViewModel">
     <Grid Background="Transparent">
-        <TextBlock Text="{Binding Greeting}"></TextBlock>
+        <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="10">
+            <Border Background="{Binding StatusColor}" Width="10" Height="10" CornerRadius="5"></Border>
+            <TextBlock VerticalAlignment="Center" Text="{Binding StatusText}"></TextBlock>
+        </StackPanel>
     </Grid>
 </UserControl>

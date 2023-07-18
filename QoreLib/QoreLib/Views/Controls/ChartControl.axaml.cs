@@ -1,8 +1,17 @@
-﻿using Avalonia;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Notifications;
+using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
+using Avalonia.Threading;
+using LiveChartsCore;
 using LiveChartsCore.Defaults;
 using LiveChartsCore.Drawing;
+using LiveChartsCore.Kernel.Sketches;
+using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Avalonia;
 using Microsoft.Extensions.DependencyInjection;
 using QoreLib.Services;
@@ -13,12 +22,17 @@ namespace QoreLib.Views.Controls;
 
 public partial class ChartControl : UserControl
 {
-    private static readonly ServiceProvider _serviceProvider = new ServiceCollection().AddSingleton<IDatabaseService, DatabaseService>().BuildServiceProvider();
-    private static readonly IDatabaseService? _databaseService = _serviceProvider.GetService<IDatabaseService>();
+    private Axis yAxis = new Axis
+    {
+        MaxLimit = 10,
+        MinLimit = 0
+    };
     public ChartControl()
     {
-        DataContext = new ChartViewModel(_databaseService);
         InitializeComponent();
+        var databaseService = ServiceLocator.Instance.DatabaseService;
+        DataContext = new ChartViewModel(databaseService, this);
+
     }
 
     private void ChartPointerPressed(object? sender, Avalonia.Input.PointerPressedEventArgs e)
@@ -30,4 +44,5 @@ public partial class ChartControl : UserControl
     {
         AvaloniaXamlLoader.Load(this);
     }
+
 }

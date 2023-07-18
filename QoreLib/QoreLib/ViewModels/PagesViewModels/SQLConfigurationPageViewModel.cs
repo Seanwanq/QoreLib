@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Data;
-using System.Data.SQLite;
 using System.IO;
-using System.Linq;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using QoreLib.Services;
@@ -17,6 +14,7 @@ public partial class SQLConfigurationPageViewModel : PageViewModelBase
     {
         IsActive = true;
         _databaseService = databaseService;
+        if (_databaseService != null) _databaseService.DatabaseConnectedChanged += OnDatabaseConnectedChanged;
     }
 
     
@@ -24,15 +22,17 @@ public partial class SQLConfigurationPageViewModel : PageViewModelBase
     
     // TODO 删掉上面的变量
     
-    [ObservableProperty] private string _databaseFolderPath;
+    [ObservableProperty] private string _databaseFolderPath = "D:/qorelibdata";
 
-    [ObservableProperty] private string _databaseName;
+    [ObservableProperty] private string _databaseName = "coredata.db";
 
-    [ObservableProperty] private string _message;
+    [ObservableProperty] private string _message = "";
 
-    [ObservableProperty] private string _errorMessage;
+    [ObservableProperty] private string _errorMessage = "";
     
-    [ObservableProperty] private string _data;
+    [ObservableProperty] private string _data = "";
+
+    [ObservableProperty] private bool _isDatabaseConnected = false;
 
     [RelayCommand]
     private void Connect()
@@ -41,6 +41,11 @@ public partial class SQLConfigurationPageViewModel : PageViewModelBase
         {
             _databaseService.ConnectScientificDatabase(DatabaseFolderPath, DatabaseName);
             Message = $"Database {DatabaseName} has been connected.";
+
+            // var spectrumData = _databaseService.SpectrumTable[1006];
+            // var dataFilePath1 = Path.Combine(DatabaseFolderPath, spectrumData.DataFile);
+            // var indexList = JsonService.ReadBaseDataJson(dataFilePath1)["Index"];
+            // Data = string.Join(", ", indexList);
         }
         catch (Exception e)
         {
@@ -108,7 +113,7 @@ public partial class SQLConfigurationPageViewModel : PageViewModelBase
         }
     }
 
-    [ObservableProperty] private string? _testTableName;
+    [ObservableProperty] private string _testTableName = "";
 
     [ObservableProperty] private bool _testTableIsMale = true;
 
@@ -134,7 +139,7 @@ public partial class SQLConfigurationPageViewModel : PageViewModelBase
         {
             _databaseService?.AddDataToTestTable(TestTableName, TestTableIsMale);
             Message = "Data Added.";
-            TestTableName = null;
+            TestTableName = "";
             TestTableBoolIndex = 0;
             TestTableIsMale = true;
         }
@@ -150,5 +155,10 @@ public partial class SQLConfigurationPageViewModel : PageViewModelBase
                 ErrorMessage = e2.Message;
             }
         }
+    }
+
+    private void OnDatabaseConnectedChanged(bool isConnected)
+    {
+        IsDatabaseConnected = isConnected;
     }
 }

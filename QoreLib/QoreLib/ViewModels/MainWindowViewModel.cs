@@ -10,7 +10,7 @@ public partial class MainWindowViewModel : ViewModelBase
         IsActive = true;
     }
 
-    [ObservableProperty] private string _title = "QoreLib++";
+    [ObservableProperty] private string _title = "QoreLib";
 
     [ObservableProperty] 
     private Color _tintColor = Colors.White;
