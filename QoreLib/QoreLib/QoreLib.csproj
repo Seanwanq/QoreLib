@@ -13,6 +13,8 @@
 
     <ItemGroup>
         <PackageReference Include="Avalonia" Version="11.0.0" />
+        <PackageReference Include="Avalonia.Controls.Skia" Version="11.0.0" />
+        <PackageReference Include="Avalonia.Svg.Skia" Version="11.0.0" />
         <PackageReference Include="Avalonia.Themes.Fluent" Version="$(AvaloniaVersion)" />
         <PackageReference Include="Avalonia.Fonts.Inter" Version="$(AvaloniaVersion)" />
         <PackageReference Include="Avalonia.ReactiveUI" Version="$(AvaloniaVersion)" />
@@ -28,6 +30,15 @@
         <PackageReference Include="Semi.Avalonia" Version="11.0.0" />
         <PackageReference Include="Semi.Avalonia.ColorPicker" Version="11.0.0" />
         <PackageReference Include="Semi.Avalonia.DataGrid" Version="11.0.0" />
+        <PackageReference Include="Svg.SourceGenerator.Skia" Version="1.0.0" />
         <PackageReference Include="System.Data.SQLite" Version="1.0.118" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Assets\Icons\" />
+    </ItemGroup>
+    
+    <ItemGroup>
+<!--        <AdditionalFiles Include="Assets/Icons/SolarRoundAltArrowLeftLineDuotone.svg" NamespaceName="QoreLib.Views.PageViews" ClassName="LineArrowLeft"/>-->
     </ItemGroup>
 </Project>
