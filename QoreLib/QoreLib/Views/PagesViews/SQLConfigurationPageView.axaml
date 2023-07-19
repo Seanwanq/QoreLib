@@ -36,47 +36,12 @@
                         </Grid>
                     </Grid>
                 </Grid>
-                <TextBlock Margin="20 0 20 -10">Message:</TextBlock>
-                <Grid Margin="10 0 10 0" Background="Transparent">
-                    <TextBox Margin="10" IsReadOnly="True" Foreground="Green" Text="{Binding Message}"></TextBox>
-                </Grid>
-                <TextBlock Margin="20 0 20 -10">Error Message:</TextBlock>
-                <Grid Margin="10 0 10 0" Background="Transparent">
-                    <TextBox Margin="10" IsReadOnly="True" Foreground="Red" Text="{Binding ErrorMessage}"></TextBox>
-                </Grid>
-                <TextBlock Margin="20 0 20 -10">Data:</TextBlock>
-                <Grid Margin="10 0 10 0" Background="Transparent">
-                    <TextBox Margin="10" IsReadOnly="True" Text="{Binding Data}"></TextBox>
-                </Grid>
                 <Grid Margin="10" Background="Transparent">
                     <Button VerticalAlignment="Center" Content="Close Connection" Margin="10 0 10 0"
                             Command="{Binding DisconnectDatabaseCommand}"
                             Classes="Danger" Theme="{DynamicResource SolidButton}">
                     </Button>
                 </Grid>
-                <Rectangle Height="1" StrokeThickness="1">
-                    <Rectangle.Stroke>Black</Rectangle.Stroke>
-                    <Rectangle.Opacity>0.1</Rectangle.Opacity>
-                </Rectangle>
-                <Grid Margin="15 0 15 0"
-                      ColumnDefinitions="* *"
-                      Background="Transparent">
-                    <TextBox Watermark="Name"
-                             Margin="5"
-                             Text="{Binding TestTableName}">
-                    </TextBox>
-                    <ComboBox Grid.Column="1"
-                              Margin="5"
-                              PlaceholderText="Male?" SelectedIndex="{Binding TestTableBoolIndex}">
-                        <ComboBoxItem>Male</ComboBoxItem>
-                        <ComboBoxItem>Female</ComboBoxItem>
-                    </ComboBox>
-                </Grid>
-                <Button Content="Add Data"
-                        Margin="20 10 20 10"
-                        Command="{Binding AddDataToTestTableCommand}">
-                </Button>
-
             </StackPanel>
         </ScrollViewer>
     </Border>

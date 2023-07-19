@@ -9,7 +9,7 @@
     <Border Padding="20">
         <StackPanel Spacing="15">
             <TextBlock HorizontalAlignment="Left" FontSize="40" FontWeight="Bold">
-                Welcome to QoreLib++
+                Welcome to QoreLib
             </TextBlock>
         </StackPanel>
     </Border>
