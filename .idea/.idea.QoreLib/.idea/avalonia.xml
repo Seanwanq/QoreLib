@@ -4,6 +4,13 @@
     <option name="projectPerEditor">
       <map>
         <entry key="QoreLib/QoreLib/App.axaml" value="QoreLib/QoreLib.Browser/QoreLib.Browser.csproj" />
+        <entry key="QoreLib/QoreLib/Themes/FirstButton.axaml" value="QoreLib/QoreLib.Browser/QoreLib.Browser.csproj" />
+        <entry key="QoreLib/QoreLib/Themes/LastButton.axaml" value="QoreLib/QoreLib.Browser/QoreLib.Browser.csproj" />
+        <entry key="QoreLib/QoreLib/Themes/NextButton.axaml" value="QoreLib/QoreLib.Browser/QoreLib.Browser.csproj" />
+        <entry key="QoreLib/QoreLib/Themes/NextUnfilledButton.axaml" value="QoreLib/QoreLib.Browser/QoreLib.Browser.csproj" />
+        <entry key="QoreLib/QoreLib/Themes/PreviousButton.axaml" value="QoreLib/QoreLib.Browser/QoreLib.Browser.csproj" />
+        <entry key="QoreLib/QoreLib/Themes/PreviousIcon.axaml" value="QoreLib/QoreLib.Browser/QoreLib.Browser.csproj" />
+        <entry key="QoreLib/QoreLib/Themes/PreviousUnfilledButton.axaml" value="QoreLib/QoreLib.Browser/QoreLib.Browser.csproj" />
         <entry key="QoreLib/QoreLib/Views/Controls/BottomBar.axaml" value="QoreLib/QoreLib.Browser/QoreLib.Browser.csproj" />
         <entry key="QoreLib/QoreLib/Views/Controls/ChartControl.axaml" value="QoreLib/QoreLib.Browser/QoreLib.Browser.csproj" />
         <entry key="QoreLib/QoreLib/Views/Controls/DataPopUp.axaml" value="QoreLib/QoreLib.Browser/QoreLib.Browser.csproj" />
