@@ -9,6 +9,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using CommunityToolkit.Mvvm.Messaging.Messages;
+using DynamicData;
 using LiveChartsCore;
 using LiveChartsCore.Defaults;
 using LiveChartsCore.Drawing;
@@ -27,7 +28,7 @@ namespace QoreLib.ViewModels.ControlsViewModels;
 public partial class ChartViewModel : ViewModelBase
 {
     private static IDatabaseService? _databaseService;
-    private CartesianChart _chart;
+    private static CartesianChart _chart;
 
     public ChartViewModel(IDatabaseService? databaseService, ChartControl chartControl)
     {
@@ -66,18 +67,57 @@ public partial class ChartViewModel : ViewModelBase
         };
     }
 
-    [ObservableProperty] private bool _isDatabaseConnected = false;
-    [ObservableProperty] private bool _isDataGood = true;
-    private static ObservableCollection<ObservablePoint>? BaseDataPoints { get; set; } = null;
+    private static bool _isDatabaseConnected = false;
+
+    private static bool IsDatabaseConnected
+    {
+        get => _isDatabaseConnected;
+        set
+        {
+            if(_isDatabaseConnected == value) return;
+            _isDatabaseConnected = value;
+            OnIsDatabaseConnectedChanged(value);
+        }
+    }
+    
+    private static bool _isDataGood = true;
+
+    private static bool IsDataGood
+    {
+        get => _isDataGood;
+        set
+        {
+            if (_isDataGood == value) return;
+            _isDataGood = value;
+            OnIsDataGoodChanged(value);
+        }
+    }
+
+    private static ObservableCollection<ObservablePoint>? BaseDataPoints { get; set; } = new();
     public static ObservableCollection<ObservablePoint> W01Points { get; set; } = new();
     public static ObservableCollection<ObservablePoint> W12Points { get; set; } = new();
-    public ISeries[] Series { get; set; }
+    public static ISeries[]? Series { get; set; }
     private static bool IsW01Selected { get; set; } = true;
-    [ObservableProperty] private double _minYAxis = 0;
-    [ObservableProperty] private double _maxYAxis = 0;
-    [ObservableProperty] private double _minXAxis = 0;
-    [ObservableProperty] private double _maxXAxis = 0;
-    [ObservableProperty] private int _dataId = 911;
+    
+    private static double MinYAxis { get; set; } = 0;
+
+    private static double MaxYAxis { get; set; } = 0;
+
+    private static double MinXAxis { get; set; } = 0;
+
+    private static double MaxXAxis { get; set; } = 0;
+
+    private static int _dataId = 905;
+    private static int DataId
+    {
+        get => _dataId;
+        set
+        {
+            if (_dataId == value) return;
+            _dataId =  value;
+            OnDataIdChanged(value);
+        }
+    }
 
     public static void AddPoint(ChartControl chartControl, object? sender, Avalonia.Input.PointerPressedEventArgs e)
     {
@@ -99,13 +139,13 @@ public partial class ChartViewModel : ViewModelBase
         }
     }
 
-    partial void OnIsDatabaseConnectedChanged(bool value)
+    private static void OnIsDatabaseConnectedChanged(bool value)
     {
         if (IsDatabaseConnected)
         {
             try
             {
-                BaseDataPoints = GetBaseDataPointsById(DataId);
+                BaseDataPoints.AddRange(GetBaseDataPointsById(DataId) ?? throw new Exception("Database connection is not established"));
                 IsDataGood = true;
                 var xAxis = new Axis { MaxLimit = MaxXAxis, MinLimit = MinXAxis };
                 var yAxis = new Axis { MaxLimit = MaxYAxis, MinLimit = MinYAxis };
@@ -127,25 +167,30 @@ public partial class ChartViewModel : ViewModelBase
                     new ValueChangedMessage<NotificationModel>(new NotificationModel
                     {
                         Content = e.Message, NoteType = NotificationType.Error, Title = "Error"
-                    }), "chartnotificationchannel");
-                BaseDataPoints = null;
+                    }), "notificationchannel");
+                BaseDataPoints.Clear();
             }
         }
         else
         {
-            BaseDataPoints = null;
+            BaseDataPoints.Clear();
+            var xAxis = new Axis { MaxLimit = 10, MinLimit = 0 };
+            var yAxis = new Axis { MaxLimit = 10, MinLimit = 0 };
+            _chart.XAxes = new List<ICartesianAxis> { xAxis };
+            _chart.YAxes = new List<ICartesianAxis> { yAxis };
         }
     }
 
     // BUG Bad positioning with OnDataIdChanged and OnIsDatabaseConnectedChanged 
     
-    partial void OnDataIdChanged(int value)
+    private static void OnDataIdChanged(int value)
     {
         if (IsDatabaseConnected)
         {
             try
             {
-                BaseDataPoints = GetBaseDataPointsById(value);
+                BaseDataPoints.Clear();
+                BaseDataPoints.AddRange(GetBaseDataPointsById(value) ?? throw new Exception("Database connection is not established"));
                 IsDataGood = true;
                 var xAxis = new Axis { MaxLimit = MaxXAxis, MinLimit = MinXAxis };
                 var yAxis = new Axis { MaxLimit = MaxYAxis, MinLimit = MinYAxis };
@@ -167,17 +212,17 @@ public partial class ChartViewModel : ViewModelBase
                     new ValueChangedMessage<NotificationModel>(new NotificationModel
                     {
                         Content = e.Message, NoteType = NotificationType.Error, Title = "Error"
-                    }), "chartnotificationchannel");
-                BaseDataPoints = null;
+                    }), "notificationchannel");
+                BaseDataPoints.Clear();
             }
         }
         else
         {
-            BaseDataPoints = null;
+            BaseDataPoints.Clear();
         } 
     }
 
-    partial void OnIsDataGoodChanged(bool value)
+    private static void OnIsDataGoodChanged(bool value)
     {
         WeakReferenceMessenger.Default.Send(new ValueChangedMessage<bool>(value), "datagoodchannel");
     }
@@ -187,11 +232,11 @@ public partial class ChartViewModel : ViewModelBase
         Messenger.Register<ChartViewModel, ValueChangedMessage<bool>, string>(this, "w01channel",
             (recipient, message) => ChartViewModel.IsW01Selected = message.Value);
         Messenger.Register<ChartViewModel, ValueChangedMessage<bool>, string>(this, "databadchannel",
-            ((r, m) => r.IsDataGood = !m.Value));
+            ((r, m) => ChartViewModel.IsDataGood = !m.Value));
         Messenger.Register<ChartViewModel, ValueChangedMessage<int>, string>(this, "chartidchannel",
-            ((r, m) => r.DataId = m.Value));
+            ((r, m) => ChartViewModel.DataId = m.Value));
         Messenger.Register<ChartViewModel, ValueChangedMessage<int>, string>(this, "idchannel",
-            ((r, m) => r.DataId = m.Value));
+            ((r, m) => ChartViewModel.DataId = m.Value));
     }
 
     private void OnDatabaseConnectedChanged(bool isConnected)
@@ -199,7 +244,7 @@ public partial class ChartViewModel : ViewModelBase
         IsDatabaseConnected = isConnected;
     }
 
-    private ObservableCollection<ObservablePoint>? GetBaseDataPointsById(int id)
+    private static ObservableCollection<ObservablePoint>? GetBaseDataPointsById(int id)
     {
         var baseDataPoints = _databaseService.SelectDataToObservableCollectionById(id);
         if (baseDataPoints is { Count: > 0 })

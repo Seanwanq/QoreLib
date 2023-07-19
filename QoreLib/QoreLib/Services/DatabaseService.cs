@@ -36,6 +36,10 @@ public interface IDatabaseService
     int GetPreviousUnfilledId(int currentId);
     int GetLastDataId();
     int GetFirstDataId();
+    int GetGroupIdById(int id);
+    string GetNameById(int id);
+    int GetIdByGroupIdAndName(int groupId, string name);
+    List<string> GetAppAndTypeById(int id);
 }
 
 public class DatabaseService : IDatabaseService
@@ -174,38 +178,45 @@ CREATE TABLE IF NOT EXISTS TestTable(
             throw new Exception("Database connection is not established");
         }
 
-        var selectedData = SpectrumTable.FirstOrDefault(s => s.Id == id);
-        if (selectedData != null)
+        if (SpectrumTable != null)
         {
-            List<double> indexList =
-                JsonService.ReadBaseDataJson(Path.Join(BaseFolderPath, selectedData.DataFile))["Index"];
-            List<double> valueReal =
-                JsonService.ReadBaseDataJson(Path.Join(BaseFolderPath, selectedData.DataFile))["ValueReal"];
-            if (indexList.Count != valueReal.Count)
+            var selectedData = SpectrumTable.FirstOrDefault(s => s.Id == id);
+            if (selectedData != null)
             {
-                throw new Exception($"Inconsistent length of horizontal and vertical data with Id: {id}");
-            }
+                List<double> indexList =
+                    JsonService.ReadBaseDataJson(Path.Join(BaseFolderPath, selectedData.DataFile))["Index"];
+                List<double> valueReal =
+                    JsonService.ReadBaseDataJson(Path.Join(BaseFolderPath, selectedData.DataFile))["ValueReal"];
+                if (indexList.Count != valueReal.Count)
+                {
+                    throw new Exception($"Inconsistent length of horizontal and vertical data with Id: {id}");
+                }
 
-            double[,] mergedArray = new double[indexList.Count, 2];
-            for (int i = 0; i < indexList.Count; i++)
+                double[,] mergedArray = new double[indexList.Count, 2];
+                for (int i = 0; i < indexList.Count; i++)
+                {
+                    mergedArray[i, 0] = Math.Abs(indexList[i]);
+                    mergedArray[i, 1] = Math.Abs(valueReal[i]);
+                }
+
+                ObservableCollection<ObservablePoint> observableCollection = new();
+                for (int i = 0; i < mergedArray.GetLength(0); i++)
+                {
+                    double x = mergedArray[i, 0];
+                    double y = mergedArray[i, 1];
+                    observableCollection.Add(new ObservablePoint(x, y));
+                }
+
+                return observableCollection;
+            }
+            else
             {
-                mergedArray[i, 0] = indexList[i];
-                mergedArray[i, 1] = valueReal[i];
+                throw new Exception($"No data found with Id: {id}");
             }
-
-            ObservableCollection<ObservablePoint> observableCollection = new();
-            for (int i = 0; i < mergedArray.GetLength(0); i++)
-            {
-                double x = mergedArray[i, 0];
-                double y = mergedArray[i, 1];
-                observableCollection.Add(new ObservablePoint(x, y));
-            }
-
-            return observableCollection;
         }
         else
         {
-            throw new Exception($"No data found with Id: {id}");
+            throw new Exception("Database connection is not established");
         }
     }
 
@@ -216,15 +227,22 @@ CREATE TABLE IF NOT EXISTS TestTable(
             throw new Exception("Database connection is not established");
         }
 
-        var laterData = SpectrumTable.Where(s => s.Id > currentId).OrderBy(s => s.Id);
-        var nextData = laterData.FirstOrDefault();
-        if (nextData != null)
+        if (SpectrumTable != null)
         {
-            return nextData.Id;
+            var laterData = SpectrumTable.Where(s => s.Id > currentId).OrderBy(s => s.Id);
+            var nextData = laterData.FirstOrDefault();
+            if (nextData != null)
+            {
+                return nextData.Id;
+            }
+            else
+            {
+                return -1;
+            }
         }
         else
         {
-            return -1;
+            throw new Exception("Database connection is not established");
         }
     }
 
@@ -235,16 +253,23 @@ CREATE TABLE IF NOT EXISTS TestTable(
             throw new Exception("Database connection is not established");
         }
 
-        var pData = SpectrumTable.Where(s => s.Id < currentId)
-            .OrderByDescending(s => s.Id);
-        var previousData = pData.LastOrDefault();
-        if (previousData != null)
+        if (SpectrumTable != null)
         {
-            return previousData.Id;
+            var pData = SpectrumTable.Where(s => s.Id < currentId)
+                .OrderByDescending(s => s.Id);
+            var previousData = pData.FirstOrDefault();
+            if (previousData != null)
+            {
+                return previousData.Id;
+            }
+            else
+            {
+                return -2;
+            }
         }
         else
         {
-            return -2;
+            throw new Exception("Database connection is not established");
         }
     }
 
@@ -255,15 +280,22 @@ CREATE TABLE IF NOT EXISTS TestTable(
             throw new Exception("Database connection is not established");
         }
 
-        var unfilledData = SpectrumTable.Where(s => s.Id > currentId && s.IsFilled == false).OrderBy(s => s.Id);
-        var nextUnfilledData = unfilledData.FirstOrDefault();
-        if (nextUnfilledData != null)
+        if (SpectrumTable != null)
         {
-            return nextUnfilledData.Id;
+            var unfilledData = SpectrumTable.Where(s => s.Id > currentId && s.IsFilled == false).OrderBy(s => s.Id);
+            var nextUnfilledData = unfilledData.FirstOrDefault();
+            if (nextUnfilledData != null)
+            {
+                return nextUnfilledData.Id;
+            }
+            else
+            {
+                return -1;
+            }
         }
         else
         {
-            return -1;
+            throw new Exception("Database connection is not established");
         }
     }
 
@@ -274,16 +306,23 @@ CREATE TABLE IF NOT EXISTS TestTable(
             throw new Exception("Database connection is not established");
         }
 
-        var unfilledData = SpectrumTable.Where(s => s.Id < currentId && s.IsFilled == false)
-            .OrderByDescending(s => s.Id);
-        var previousUnfilledData = unfilledData.LastOrDefault();
-        if (previousUnfilledData != null)
+        if (SpectrumTable != null)
         {
-            return previousUnfilledData.Id;
+            var unfilledData = SpectrumTable.Where(s => s.Id < currentId && s.IsFilled == false)
+                .OrderByDescending(s => s.Id);
+            var previousUnfilledData = unfilledData.FirstOrDefault();
+            if (previousUnfilledData != null)
+            {
+                return previousUnfilledData.Id;
+            }
+            else
+            {
+                return -2;
+            }
         }
         else
         {
-            return -2;
+            throw new Exception("Database connection is not established");
         }
     }
 
@@ -294,14 +333,21 @@ CREATE TABLE IF NOT EXISTS TestTable(
             throw new Exception("Database connection is not established");
         }
 
-        var lastData = SpectrumTable.OrderByDescending(s => s.Id).FirstOrDefault();
-        if (lastData != null)
+        if (SpectrumTable != null)
         {
-            return lastData.Id;
+            var lastData = SpectrumTable.OrderByDescending(s => s.Id).FirstOrDefault();
+            if (lastData != null)
+            {
+                return lastData.Id;
+            }
+            else
+            {
+                throw new Exception("No data in database");
+            }
         }
         else
         {
-            throw new Exception("No data in database");
+            throw new Exception("Database connection is not established");
         }
     }
 
@@ -312,14 +358,121 @@ CREATE TABLE IF NOT EXISTS TestTable(
             throw new Exception("Database connection is not established");
         }
 
-        var firstData = SpectrumTable.OrderBy(s => s.Id).FirstOrDefault();
-        if (firstData != null)
+        if (SpectrumTable != null)
         {
-            return firstData.Id;
+            var firstData = SpectrumTable.OrderBy(s => s.Id).FirstOrDefault();
+            if (firstData != null)
+            {
+                return firstData.Id;
+            }
+            else
+            {
+                throw new Exception("No data in database");
+            }
         }
         else
         {
-            throw new Exception("No data in database");
+            throw new Exception("Database connection is not established");
         }
+    }
+
+    public int GetGroupIdById(int id)
+    {
+        if (SciDB == null)
+        {
+            throw new Exception("Database connection is not established");
+        }
+
+        if (SpectrumTable != null)
+        {
+            var selectedData = SpectrumTable.FirstOrDefault(s => s.Id == id);
+            if (selectedData != null)
+            {
+                return selectedData.GroupId;
+            }
+            else
+            {
+                throw new Exception($"No data found with Id: {id}");
+            }
+        }
+        else
+        {
+            throw new Exception("Database connection is not established");
+        }
+    }
+    
+    public string GetNameById(int id)
+    {
+        if (SciDB == null)
+        {
+            throw new Exception("Database connection is not established");
+        }
+
+        if (SpectrumTable != null)
+        {
+            var selectedData = SpectrumTable.FirstOrDefault(s => s.Id == id);
+            if (selectedData != null)
+            {
+                return selectedData.Name;
+            }
+            else
+            {
+                throw new Exception($"No data found with Id: {id}");
+            }
+        }
+        else
+        {
+            throw new Exception("Database connection is not established");
+        }
+    }
+
+    public int GetIdByGroupIdAndName(int groupId, string name)
+    {
+        if (SciDB == null)
+        {
+            throw new Exception("Database connection is not established");
+        }
+
+        if (SpectrumTable != null)
+        {
+            var selectedData = SpectrumTable.FirstOrDefault(s => s.GroupId == groupId && s.Name == name);
+            if (selectedData != null)
+            {
+                return selectedData.Id;
+            }
+            else
+            {
+                throw new Exception($"No data found with Group Id: {groupId} and Name: {name}");
+            }
+        }
+        else
+        {
+            throw new Exception("Database connection is not established");
+        } 
+    }
+    
+    public List<string> GetAppAndTypeById(int id)
+    {
+        if (SciDB == null)
+        {
+            throw new Exception("Database connection is not established");
+        }
+
+        if (SpectrumTable != null)
+        {
+            var selectedData = SpectrumTable.FirstOrDefault(s => s.Id == id);
+            if (selectedData != null)
+            {
+                return new List<string>{selectedData.APP, selectedData.Type};
+            }
+            else
+            {
+                throw new Exception($"No data found with Id: {id}");
+            }
+        }
+        else
+        {
+            throw new Exception("Database connection is not established");
+        } 
     }
 }

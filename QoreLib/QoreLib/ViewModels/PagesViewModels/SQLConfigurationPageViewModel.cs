@@ -1,7 +1,11 @@
 ﻿using System;
 using System.IO;
+using Avalonia.Controls.Notifications;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
+using CommunityToolkit.Mvvm.Messaging.Messages;
+using QoreLib.Models;
 using QoreLib.Services;
 
 namespace QoreLib.ViewModels.PagesViewModels;
@@ -17,21 +21,9 @@ public partial class SQLConfigurationPageViewModel : PageViewModelBase
         if (_databaseService != null) _databaseService.DatabaseConnectedChanged += OnDatabaseConnectedChanged;
     }
 
-    
-    [ObservableProperty] private string _databasePath;
-    
     // TODO 删掉上面的变量
-    
     [ObservableProperty] private string _databaseFolderPath = "D:/qorelibdata";
-
     [ObservableProperty] private string _databaseName = "coredata.db";
-
-    [ObservableProperty] private string _message = "";
-
-    [ObservableProperty] private string _errorMessage = "";
-    
-    [ObservableProperty] private string _data = "";
-
     [ObservableProperty] private bool _isDatabaseConnected = false;
 
     [RelayCommand]
@@ -39,63 +31,63 @@ public partial class SQLConfigurationPageViewModel : PageViewModelBase
     {
         try
         {
-            _databaseService.ConnectScientificDatabase(DatabaseFolderPath, DatabaseName);
-            Message = $"Database {DatabaseName} has been connected.";
-
-            // var spectrumData = _databaseService.SpectrumTable[1006];
-            // var dataFilePath1 = Path.Combine(DatabaseFolderPath, spectrumData.DataFile);
-            // var indexList = JsonService.ReadBaseDataJson(dataFilePath1)["Index"];
-            // Data = string.Join(", ", indexList);
+            if (!IsDatabaseConnected)
+            {
+                _databaseService?.ConnectScientificDatabase(DatabaseFolderPath, DatabaseName);
+                WeakReferenceMessenger.Default.Send(
+                    new ValueChangedMessage<NotificationModel>(new NotificationModel
+                    {
+                        Content = $"Successfully connected to database {DatabaseName}.",
+                        NoteType = NotificationType.Success,
+                        Title = "Success"
+                    }), "notificationchannel");
+            }
+            else
+            {
+                WeakReferenceMessenger.Default.Send(
+                    new ValueChangedMessage<NotificationModel>(new NotificationModel
+                    {
+                        Content = $"Have already connected to database {DatabaseName}.",
+                        NoteType = NotificationType.Information,
+                        Title = "Notice"
+                    }), "notificationchannel");
+            }
         }
         catch (Exception e)
         {
-            ErrorMessage = e.Message;
+            WeakReferenceMessenger.Default.Send(
+                new ValueChangedMessage<NotificationModel>(new NotificationModel
+                {
+                    Content = e.Message,
+                    NoteType = NotificationType.Error,
+                    Title = "Error"
+                }), "notificationchannel");
         }
     }
-
-    [RelayCommand]
-    private void ReadData()
-    {
-        // if (string.IsNullOrWhiteSpace(DatabasePath) || !File.Exists(DatabasePath))
-        // {
-        //     Data = "Database file does not exist";
-        //     return;
-        // }
-        //
-        // try
-        // {
-        //     using (var connection = new SQLiteConnection($"Data Source={DatabasePath}"))
-        //     {
-        //         connection.Open();
-        //
-        //         using (var command = new SQLiteCommand("SELECT * FROM table1", connection))
-        //         using (var reader = command.ExecuteReader())
-        //         {
-        //             var query = from IDataRecord record in reader
-        //                 select record.GetString(1);
-        //
-        //             Data = string.Join(", ", query);
-        //         }
-        //     }
-        // }
-        // catch (Exception ex)
-        // {
-        //     Data = $"Error reading data from database: {ex.Message}";
-        // }
-    }
-    
 
     [RelayCommand]
     private void CreateAndConnectDatabase()
     {
         try
         {
-            _databaseService.CreateAndConnectScientificDatabase(DatabaseFolderPath, DatabaseName);
-            Message = $"Database {DatabaseName} has been created and connected.";
+            _databaseService?.CreateAndConnectScientificDatabase(DatabaseFolderPath, DatabaseName);
+            WeakReferenceMessenger.Default.Send(
+                new ValueChangedMessage<NotificationModel>(new NotificationModel
+                {
+                    Content = $"Database {DatabaseName} has been created and connected.",
+                    NoteType = NotificationType.Success,
+                    Title = "Success"
+                }), "notificationchannel");
         }
         catch (Exception e)
         {
-            ErrorMessage = e.Message;
+            WeakReferenceMessenger.Default.Send(
+                new ValueChangedMessage<NotificationModel>(new NotificationModel
+                {
+                    Content = e.Message,
+                    NoteType = NotificationType.Error,
+                    Title = "Error"
+                }), "notificationchannel");
         }
     }
 
@@ -105,55 +97,23 @@ public partial class SQLConfigurationPageViewModel : PageViewModelBase
         try
         {
             _databaseService?.CloseScientificDatabaseConnection();
-            Message = $"Database {DatabaseName} has been closed.";
+            WeakReferenceMessenger.Default.Send(
+                new ValueChangedMessage<NotificationModel>(new NotificationModel
+                {
+                    Content = $"Database {DatabaseName} has been \nclosed.",
+                    NoteType = NotificationType.Success,
+                    Title = "Success"
+                }), "notificationchannel");
         }
         catch (Exception e)
         {
-            ErrorMessage = e.Message;
-        }
-    }
-
-    [ObservableProperty] private string _testTableName = "";
-
-    [ObservableProperty] private bool _testTableIsMale = true;
-
-    [ObservableProperty] private int _testTableBoolIndex = 0;
-
-    partial void OnTestTableBoolIndexChanged(int value)
-    {
-        Message = TestTableBoolIndex.ToString();
-        if (TestTableBoolIndex == 0)
-        {
-            TestTableIsMale = true;
-        }
-        else if (TestTableBoolIndex == 1)
-        {
-            TestTableIsMale = false;
-        }
-    }
-
-    [RelayCommand]
-    private void AddDataToTestTable()
-    {
-        try
-        {
-            _databaseService?.AddDataToTestTable(TestTableName, TestTableIsMale);
-            Message = "Data Added.";
-            TestTableName = "";
-            TestTableBoolIndex = 0;
-            TestTableIsMale = true;
-        }
-        catch(Exception e)
-        {
-            ErrorMessage = e.Message;
-            try
-            {
-                _databaseService?.ConnectScientificDatabase(DatabaseFolderPath, DatabaseName);
-            }
-            catch (Exception e2)
-            {
-                ErrorMessage = e2.Message;
-            }
+            WeakReferenceMessenger.Default.Send(
+                new ValueChangedMessage<NotificationModel>(new NotificationModel
+                {
+                    Content = e.Message + "\nYou would better restart the app.",
+                    NoteType = NotificationType.Error,
+                    Title = "Error"
+                }), "notificationchannel");
         }
     }
 

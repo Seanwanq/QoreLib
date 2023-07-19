@@ -47,7 +47,7 @@ public partial class MainViewModel : ViewModelBase
 
     [ObservableProperty] private bool _isBottomBarOpen = true;
 
-    [ObservableProperty] private NotificationModel? _chartNotification = null;
+    [ObservableProperty] private NotificationModel? _notification = null;
 
     protected override void OnActivated()
     {
@@ -55,7 +55,7 @@ public partial class MainViewModel : ViewModelBase
         Messenger.Register<MainViewModel, ValueChangedMessage<bool>, string>(this, "rightbarchannel", RightBarAdjustment);
         Messenger.Register<MainViewModel, ValueChangedMessage<bool>, string>(this, "bottombarchannel", BottomBarAdjustment);
         Messenger.Register<MainViewModel, ValueChangedMessage<int>, string>(this, "leftbarbuttonchannel", (recipient, message) => recipient.PageIndex = message.Value);
-        Messenger.Register<MainViewModel, ValueChangedMessage<NotificationModel>, string>(this, "chartnotificationchannel",((recipient, message) => recipient.ChartNotification = message.Value));
+        Messenger.Register<MainViewModel, ValueChangedMessage<NotificationModel>, string>(this, "notificationchannel",((recipient, message) => recipient.Notification = message.Value));
     }
 
     private void LeftBarAdjustment(MainViewModel r, ValueChangedMessage<bool> m)
@@ -83,7 +83,7 @@ public partial class MainViewModel : ViewModelBase
         CurrentPage = Pages[PageIndex];
     }
 
-    partial void OnChartNotificationChanged(NotificationModel value)
+    partial void OnNotificationChanged(NotificationModel value)
     {
         ServiceLocator.Instance.NotificationManager.Show(new Notification(value.Title, value.Content, value.NoteType));
     }
