@@ -24,8 +24,8 @@ def LoadObject(filePath: str):
 def MakeJson(obj, basePath):
     idPath = str(obj["GroupId"])
     namePath = obj["Name"]
-    fullPath = os.path.join(basePath, "DataFiles", idPath, namePath, "BaseData.json")
-    relativePath = posixpath.join("DataFiles", idPath, namePath, "BaseData.json")
+    fullPath = os.path.join(basePath, "DataFiles", idPath, namePath, "SpectrumBaseData.json")
+    relativePath = posixpath.join("DataFiles", idPath, namePath, "SpectrumBaseData.json")
     dirPath = os.path.dirname(fullPath)
     if not os.path.exists(dirPath):
         os.makedirs(dirPath)
