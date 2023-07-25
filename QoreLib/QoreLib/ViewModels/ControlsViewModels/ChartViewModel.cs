@@ -18,9 +18,12 @@ using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Avalonia;
 using LiveChartsCore.SkiaSharpView.Painting;
+using Microsoft.CodeAnalysis;
 using QoreLib.Models;
 using QoreLib.Services;
+using QoreLib.ViewModels.PagesViewModels;
 using QoreLib.Views.Controls;
+using QoreLib.Views.PagesViews;
 using SkiaSharp;
 
 namespace QoreLib.ViewModels.ControlsViewModels;
@@ -74,12 +77,12 @@ public partial class ChartViewModel : ViewModelBase
         get => _isDatabaseConnected;
         set
         {
-            if(_isDatabaseConnected == value) return;
+            if (_isDatabaseConnected == value) return;
             _isDatabaseConnected = value;
             OnIsDatabaseConnectedChanged(value);
         }
     }
-    
+
     private static bool _isDataGood = true;
 
     private static bool IsDataGood
@@ -98,23 +101,57 @@ public partial class ChartViewModel : ViewModelBase
     public static ObservableCollection<ObservablePoint> W12Points { get; set; } = new();
     public static ISeries[]? Series { get; set; }
     private static bool IsW01Selected { get; set; } = true;
-    
     private static double MinYAxis { get; set; } = 0;
-
     private static double MaxYAxis { get; set; } = 0;
-
     private static double MinXAxis { get; set; } = 0;
-
     private static double MaxXAxis { get; set; } = 0;
+    private static List<double> Omega01Index { get; set; } = new();
+    private static List<double> Omega01ValueReal { get; set; } = new();
+    private static List<double> Omega12Index { get; set; } = new();
+    private static List<double> Omega12ValueReal { get; set; } = new();
+    private static SpectrumAdditionalDataModel AdditionalData { get; set; } = new();
+    private static bool _isFilled = false;
+    private static bool IsFilled
+    {
+        get => _isFilled;
+        set
+        {
+            if(_isFilled == value) return;
+            _isFilled = value;
+        }
+    }
 
-    private static int _dataId = 905;
+    private static bool _isUseful = true;
+
+    private static bool IsUseful
+    {
+        get => _isUseful;
+        set
+        {
+            if (_isUseful == value) return;
+            _isUseful = value;
+            OnIsUsefulChanged(value);
+        }
+    }
+    private static bool _isOK = false;
+    private static bool IsOK
+    {
+        get => _isOK;
+        set
+        {
+            if (_isOK == value) return;
+            _isOK = value;
+            OnIsOKChanged(value);
+        }
+    }
+    private static int _dataId = DataPlotPageViewModel.ExposedId;
     private static int DataId
     {
         get => _dataId;
         set
         {
             if (_dataId == value) return;
-            _dataId =  value;
+            _dataId = value;
             OnDataIdChanged(value);
         }
     }
@@ -131,12 +168,18 @@ public partial class ChartViewModel : ViewModelBase
         var y = scaledPoint[1];
         if (IsW01Selected)
         {
+            Omega01Index.Add(x);
+            Omega01ValueReal.Add(y);
             W01Points.Add(new ObservablePoint(x, y));
         }
         else
         {
+            Omega12Index.Add(x);
+            Omega12ValueReal.Add(y);
             W12Points.Add(new ObservablePoint(x, y));
         }
+
+        IsOK = false;
     }
 
     private static void OnIsDatabaseConnectedChanged(bool value)
@@ -145,7 +188,8 @@ public partial class ChartViewModel : ViewModelBase
         {
             try
             {
-                BaseDataPoints.AddRange(GetBaseDataPointsById(DataId) ?? throw new Exception("Database connection is not established"));
+                BaseDataPoints.AddRange(GetBaseDataPointsById(DataId) ??
+                                        throw new Exception("Database connection is not established"));
                 IsDataGood = true;
                 var xAxis = new Axis { MaxLimit = MaxXAxis, MinLimit = MinXAxis };
                 var yAxis = new Axis { MaxLimit = MaxYAxis, MinLimit = MinYAxis };
@@ -181,8 +225,6 @@ public partial class ChartViewModel : ViewModelBase
         }
     }
 
-    // BUG Bad positioning with OnDataIdChanged and OnIsDatabaseConnectedChanged 
-    
     private static void OnDataIdChanged(int value)
     {
         if (IsDatabaseConnected)
@@ -190,7 +232,9 @@ public partial class ChartViewModel : ViewModelBase
             try
             {
                 BaseDataPoints.Clear();
-                BaseDataPoints.AddRange(GetBaseDataPointsById(value) ?? throw new Exception("Database connection is not established"));
+                ClearPoints();
+                BaseDataPoints.AddRange(GetBaseDataPointsById(value) ??
+                                        throw new Exception("Database connection is not established"));
                 IsDataGood = true;
                 var xAxis = new Axis { MaxLimit = MaxXAxis, MinLimit = MinXAxis };
                 var yAxis = new Axis { MaxLimit = MaxYAxis, MinLimit = MinYAxis };
@@ -219,12 +263,14 @@ public partial class ChartViewModel : ViewModelBase
         else
         {
             BaseDataPoints.Clear();
-        } 
+        }
     }
 
     private static void OnIsDataGoodChanged(bool value)
     {
         WeakReferenceMessenger.Default.Send(new ValueChangedMessage<bool>(value), "datagoodchannel");
+        if(!value)
+            ClearPoints();
     }
 
     protected override void OnActivated()
@@ -237,6 +283,10 @@ public partial class ChartViewModel : ViewModelBase
             ((r, m) => ChartViewModel.DataId = m.Value));
         Messenger.Register<ChartViewModel, ValueChangedMessage<int>, string>(this, "idchannel",
             ((r, m) => ChartViewModel.DataId = m.Value));
+        Messenger.Register<ChartViewModel, ValueChangedMessage<bool>, string>(this, "isplotokreceivechannel",
+            (r, m) => ChartViewModel.IsOK = m.Value);
+        Messenger.Register<ChartViewModel, ValueChangedMessage<bool>, string>(this, "isusefulchannel",
+            ((r, m) => ChartViewModel.IsUseful = m.Value));
     }
 
     private void OnDatabaseConnectedChanged(bool isConnected)
@@ -246,7 +296,7 @@ public partial class ChartViewModel : ViewModelBase
 
     private static ObservableCollection<ObservablePoint>? GetBaseDataPointsById(int id)
     {
-        var baseDataPoints = _databaseService.SelectDataToObservableCollectionById(id);
+        var baseDataPoints = _databaseService?.SelectSpectrumBaseDataToObservableCollectionById(id);
         if (baseDataPoints is { Count: > 0 })
         {
             double minXValue = (double)baseDataPoints.Min(p => p.X);
@@ -265,8 +315,80 @@ public partial class ChartViewModel : ViewModelBase
             MinYAxis = newMinYAxis;
             MaxXAxis = newMaxXAxis;
             MinXAxis = newMinXAxis;
+            ClearPoints();
+            IsFilled = _databaseService.GetSpectrumDataIsFilledById(id);
+            if (IsFilled)
+            {
+                W01Points.AddRange(_databaseService.SelectSpectrumOmega01DataToObservableCollectionById(id));
+                W12Points.AddRange(_databaseService.SelectSpectrumOmega12DataToObservableCollectionById(id));
+                Omega01Index.AddRange(_databaseService.SelectSpectrumAdditionalToDictionaryListDoubleById(id)["Omega01Index"]);
+                Omega01ValueReal.AddRange(_databaseService.SelectSpectrumAdditionalToDictionaryListDoubleById(id)["Omega01ValueReal"]);
+                Omega12Index.AddRange(_databaseService.SelectSpectrumAdditionalToDictionaryListDoubleById(id)["Omega12Index"]);
+                Omega12ValueReal.AddRange(_databaseService.SelectSpectrumAdditionalToDictionaryListDoubleById(id)["Omega12ValueReal"]);
+            }
         }
 
         return baseDataPoints;
+    }
+
+    private static void OnIsOKChanged(bool value)
+    {
+        if (!value)
+        {
+            WeakReferenceMessenger.Default.Send(new ValueChangedMessage<bool>(value), "isplotoksendchannel");
+        }
+    }
+
+    private static void OnIsUsefulChanged(bool value)
+    {
+        IsOK = false;
+    }
+
+    public static void OKCommand()
+    {
+        if (_databaseService == null)
+        {
+            WeakReferenceMessenger.Default.Send(
+                new ValueChangedMessage<NotificationModel>(new NotificationModel
+                {
+                    Content = "Failed to connect to the database.",
+                    NoteType = NotificationType.Error,
+                    Title = "Error"
+                }), "notificationchannel");
+        }
+
+        AdditionalData.GroupId = _databaseService!.GetSpectrumDataGroupIdById(DataId);
+        AdditionalData.Name = _databaseService.GetSpectrumDataNameById(DataId);
+        AdditionalData.ValueType = _databaseService.GetSpectrumDataAppAndTypeById(DataId)["Type"];
+        AdditionalData.Omega01Index = Omega01Index;
+        AdditionalData.Omega01ValuReal = Omega01ValueReal;
+        AdditionalData.Omega12Index = Omega12Index;
+        AdditionalData.Omega12ValueReal = Omega12ValueReal;
+    }
+
+    public static void SubmitCommand()
+    {
+        try
+        {
+            _databaseService.SaveSpectrumAdditionalDataToJsonAndUpdateSqlById(DataId, AdditionalData, IsUseful,
+                !IsDataGood);
+        }
+        catch (Exception e)
+        {
+            WeakReferenceMessenger.Default.Send(new ValueChangedMessage<NotificationModel>(
+                new NotificationModel { Content = e.Message, NoteType = NotificationType.Error, Title = "Error" }));
+        }
+    }
+
+    public static void ClearPoints()
+    {
+        W01Points.Clear();
+        W12Points.Clear();
+        Omega01Index.Clear();
+        Omega01ValueReal.Clear();
+        Omega12Index.Clear();
+        Omega12ValueReal.Clear();
+        AdditionalData.Clear();
+        IsOK = false;
     }
 }

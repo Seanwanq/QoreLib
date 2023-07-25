@@ -57,7 +57,7 @@
                     </StackPanel>
                 </Grid>
                 <Grid Grid.Row="1" Grid.Column="0" Margin="5">
-                    <Grid ZIndex="2" IsVisible="{Binding IsDataBad}">
+                    <Grid ZIndex="2" IsVisible="{Binding IsPlotSheltered}">
                         <Grid.Background>
                             <SolidColorBrush Color="Transparent"></SolidColorBrush>
                         </Grid.Background>
@@ -73,8 +73,14 @@
                         <viewc:ChartControl ZIndex="1"></viewc:ChartControl>
                     </Border>
                 </Grid>
-                <Grid Grid.Row="1" Grid.Column="1" Margin="5">
-                    <StackPanel Spacing="5" VerticalAlignment="Center">
+                <Grid Grid.Row="1" Grid.Column="1" Margin="5" RowDefinitions="Auto * Auto">
+                    <StackPanel Grid.Row="0" Spacing="5">
+                        <StackPanel Orientation="Horizontal" Spacing="5">
+                            <TextBlock>Editable</TextBlock>
+                            <ToggleSwitch Theme="{DynamicResource SimpleToggleSwitch}" IsChecked="{Binding IsEditable}"></ToggleSwitch>
+                        </StackPanel>
+                    </StackPanel>
+                    <StackPanel Spacing="5" VerticalAlignment="Center" Grid.Row="1">
                         <Border Theme="{StaticResource RadioButtonGroupBorder}">
                             <StackPanel Spacing="0">
                                 <RadioButton x:Name="w01RadioButton" IsChecked="{Binding IsW01Selected}"
@@ -104,7 +110,12 @@
                             </StackPanel>
                         </Border>
                         <Button Command="{Binding ClearPointsCommand}" Classes="Warning">Clear Points</Button>
-                        <CheckBox IsChecked="{Binding IsDataBad}" HorizontalAlignment="Center">Bad Data?</CheckBox>
+                        <CheckBox IsChecked="{Binding !IsDataUseful}" HorizontalAlignment="Left">Useless Data?</CheckBox>
+                        <CheckBox IsChecked="{Binding IsDataBad}" HorizontalAlignment="Left">Bad Data?</CheckBox>
+                    </StackPanel>
+                    <StackPanel Grid.Row="2" Spacing="5">
+                        <Button Command="{Binding CheckOKCommand}" Classes="Success">OK</Button>
+                        <Button Command="{Binding SubmitCommand}" Classes="Success" Theme="{DynamicResource SolidButton}">Submit</Button>
                     </StackPanel>
                 </Grid>
             </Grid>

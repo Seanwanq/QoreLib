@@ -24,7 +24,9 @@ public partial class SQLConfigurationPageViewModel : PageViewModelBase
     // TODO 删掉上面的变量
     [ObservableProperty] private string _databaseFolderPath = "D:/qorelibdata";
     [ObservableProperty] private string _databaseName = "coredata.db";
-    [ObservableProperty] private bool _isDatabaseConnected = false;
+
+    [ObservableProperty] [NotifyCanExecuteChangedFor(nameof(DisconnectDatabaseCommand))]
+    private bool _isDatabaseConnected = false;
 
     [RelayCommand]
     private void Connect()
@@ -33,7 +35,7 @@ public partial class SQLConfigurationPageViewModel : PageViewModelBase
         {
             if (!IsDatabaseConnected)
             {
-                _databaseService?.ConnectScientificDatabase(DatabaseFolderPath, DatabaseName);
+                _databaseService?.ConnectToScientificDatabase(DatabaseFolderPath, DatabaseName);
                 WeakReferenceMessenger.Default.Send(
                     new ValueChangedMessage<NotificationModel>(new NotificationModel
                     {
@@ -58,9 +60,7 @@ public partial class SQLConfigurationPageViewModel : PageViewModelBase
             WeakReferenceMessenger.Default.Send(
                 new ValueChangedMessage<NotificationModel>(new NotificationModel
                 {
-                    Content = e.Message,
-                    NoteType = NotificationType.Error,
-                    Title = "Error"
+                    Content = e.Message, NoteType = NotificationType.Error, Title = "Error"
                 }), "notificationchannel");
         }
     }
@@ -70,7 +70,7 @@ public partial class SQLConfigurationPageViewModel : PageViewModelBase
     {
         try
         {
-            _databaseService?.CreateAndConnectScientificDatabase(DatabaseFolderPath, DatabaseName);
+            _databaseService?.CreateAndConnectToScientificDatabase(DatabaseFolderPath, DatabaseName);
             WeakReferenceMessenger.Default.Send(
                 new ValueChangedMessage<NotificationModel>(new NotificationModel
                 {
@@ -84,14 +84,14 @@ public partial class SQLConfigurationPageViewModel : PageViewModelBase
             WeakReferenceMessenger.Default.Send(
                 new ValueChangedMessage<NotificationModel>(new NotificationModel
                 {
-                    Content = e.Message,
-                    NoteType = NotificationType.Error,
-                    Title = "Error"
+                    Content = e.Message, NoteType = NotificationType.Error, Title = "Error"
                 }), "notificationchannel");
         }
     }
 
-    [RelayCommand]
+    private bool IsDisconnectDatabaseButtonEnabled() => IsDatabaseConnected;
+
+    [RelayCommand(CanExecute = nameof(IsDisconnectDatabaseButtonEnabled))]
     private void DisconnectDatabase()
     {
         try
