@@ -7,8 +7,7 @@ public class SpectrumModel
     public int Id { get; set; }
     public int GroupId { get; set; }
     public string DataFile { get; set; }
-    public string? Omega01File { get; set; }
-    public string? Omega12File { get; set; }
+    public string? Omega01AndOmega12File { get; set; }
     public string APP { get; set; }
     public string Type { get; set; }
     public string Name { get; set; }
