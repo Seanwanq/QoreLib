@@ -10,9 +10,6 @@ public class ScientificDatabaseContext : DbContext
 {
     public DbSet<SpectrumModel> SpectrumTable { get; set; }
     
-    // TEST
-    public DbSet<TestModel> TestTable { get; set; }
-
     public string DbPath { get; }
 
     public ScientificDatabaseContext(string folderPath, string dbName)
