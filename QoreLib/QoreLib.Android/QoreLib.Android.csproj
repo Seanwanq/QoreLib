@@ -20,14 +20,17 @@
     <ItemGroup>
         <PackageReference Include="Avalonia" Version="11.0.0" />
         <PackageReference Include="Avalonia.Android" Version="11.0.0" />
+        <PackageReference Include="Avalonia.AvaloniaEdit" Version="11.0.0" />
         <PackageReference Include="Avalonia.Controls.Skia" Version="11.0.0" />
         <PackageReference Include="Avalonia.Diagnostics" Version="11.0.0" />
         <PackageReference Include="Avalonia.Fonts.Inter" Version="11.0.0" />
         <PackageReference Include="Avalonia.ReactiveUI" Version="11.0.0" />
         <PackageReference Include="Avalonia.Svg.Skia" Version="11.0.0" />
         <PackageReference Include="Avalonia.Themes.Fluent" Version="11.0.0" />
+        <PackageReference Include="AvaloniaEdit.TextMate" Version="11.0.0" />
         <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.1" />
         <PackageReference Include="LiveChartsCore.SkiaSharpView.Avalonia" Version="2.0.0-beta.810" />
+        <PackageReference Include="Markdown.Avalonia" Version="11.0.0" />
         <PackageReference Include="Microsoft.Data.Sqlite" Version="8.0.0-preview.6.23329.4" />
         <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.0-preview.5.23280.1" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="8.0.0-preview.5.23280.1" />
@@ -38,6 +41,7 @@
         <PackageReference Include="Semi.Avalonia.DataGrid" Version="11.0.0" />
         <PackageReference Include="Svg.SourceGenerator.Skia" Version="1.0.0" />
         <PackageReference Include="System.Data.SQLite" Version="1.0.118" />
+        <PackageReference Include="TextMateSharp.Grammars" Version="1.0.55" />
         <PackageReference Include="Xamarin.AndroidX.Core.SplashScreen" Version="1.0.1.1" />
     </ItemGroup>
 

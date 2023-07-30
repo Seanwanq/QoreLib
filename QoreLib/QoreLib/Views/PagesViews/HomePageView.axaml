@@ -3,14 +3,17 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vmp="clr-namespace:QoreLib.ViewModels.PagesViewModels"
+             xmlns:mdxaml="https://github.com/whistyun/Markdown.Avalonia.Tight"
+             xmlns:ctxt="clr-namespace:ColorTextBlock.Avalonia;assembly=ColorTextBlock.Avalonia"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="QoreLib.Views.PagesViews.HomePageView"
              x:DataType="vmp:HomePageViewModel">
     <Border Padding="20">
         <StackPanel Spacing="15">
-            <TextBlock HorizontalAlignment="Left" FontSize="40" FontWeight="Bold">
-                Welcome to QoreLib
-            </TextBlock>
+            <mdxaml:MarkdownScrollViewer Source="avares://QoreLib/Documents/Welcome.md">
+                <mdxaml:MarkdownScrollViewer.Styles>
+                </mdxaml:MarkdownScrollViewer.Styles>
+            </mdxaml:MarkdownScrollViewer>
         </StackPanel>
     </Border>
 </UserControl>

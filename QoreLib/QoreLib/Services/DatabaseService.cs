@@ -43,7 +43,7 @@ public interface IDatabaseService
     Dictionary<string, string> GetSpectrumDataAppAndTypeById(int id);
     bool GetSpectrumDataIsFilledById(int id);
     ObservableCollection<ObservablePoint> SelectSpectrumOmega01DataToObservableCollectionById(int id);
-    ObservableCollection<ObservablePoint> SelectSpectrumOmega12DataToObservableCollectionById(int id);
+    ObservableCollection<ObservablePoint> SelectSpectrumHalfOmega02DataToObservableCollectionById(int id);
     Dictionary<string, List<double>> SelectSpectrumAdditionalToDictionaryListDoubleById(int id);
 
     void SaveSpectrumAdditionalDataToJsonAndUpdateSqlById(int id, SpectrumAdditionalDataModel spectrumAdditionalData,
@@ -97,7 +97,7 @@ CREATE TABLE IF NOT EXISTS SpectrumTable(
     Id INTEGER PRIMARY KEY AUTOINCREMENT,
     GroupId INTEGER NOT NULL,
     DataFile TEXT NOT NULL,
-    Omega01AndOmega12File TEXT,
+    Omega01AndHalfOmega02File TEXT,
     APP TEXT NOT NULL,
     Type TEXT NOT NULL,
     Name TEXT NOT NULL,
@@ -105,7 +105,6 @@ CREATE TABLE IF NOT EXISTS SpectrumTable(
     IsUseful INTEGER,
     IsWrongData INTEGER DEFAULT 0,
     CreateTime TEXT NOT NULL,
-    AlterTime TEXT NOT NULL,
     MarkTime TEXT
 );
 ");
@@ -492,11 +491,11 @@ CREATE TABLE IF NOT EXISTS SpectrumTable(
             if (selectedData != null)
             {
                 List<double> indexList = SpectrumJsonService
-                    .ReadSpectrumAdditionalDataJson(Path.Join(BaseFolderPath, selectedData.Omega01AndOmega12File))
+                    .ReadSpectrumAdditionalDataJson(Path.Join(BaseFolderPath, selectedData.Omega01AndHalfOmega02File))
                     .Omega01Index;
                 List<double> valueReal = SpectrumJsonService
-                    .ReadSpectrumAdditionalDataJson(Path.Join(BaseFolderPath, selectedData.Omega01AndOmega12File))
-                    .Omega01ValuReal;
+                    .ReadSpectrumAdditionalDataJson(Path.Join(BaseFolderPath, selectedData.Omega01AndHalfOmega02File))
+                    .Omega01ValueReal;
                 if (indexList.Count != valueReal.Count)
                 {
                     throw new Exception($"Inconsistent length of horizontal and vertical Omega01 data with Id: {id}");
@@ -530,7 +529,7 @@ CREATE TABLE IF NOT EXISTS SpectrumTable(
         }
     }
 
-    public ObservableCollection<ObservablePoint> SelectSpectrumOmega12DataToObservableCollectionById(int id)
+    public ObservableCollection<ObservablePoint> SelectSpectrumHalfOmega02DataToObservableCollectionById(int id)
     {
         if (SciDB == null)
         {
@@ -543,11 +542,11 @@ CREATE TABLE IF NOT EXISTS SpectrumTable(
             if (selectedData != null)
             {
                 List<double> indexList = SpectrumJsonService
-                    .ReadSpectrumAdditionalDataJson(Path.Join(BaseFolderPath, selectedData.Omega01AndOmega12File))
-                    .Omega12Index;
+                    .ReadSpectrumAdditionalDataJson(Path.Join(BaseFolderPath, selectedData.Omega01AndHalfOmega02File))
+                    .HalfOmega02Index;
                 List<double> valueReal = SpectrumJsonService
-                    .ReadSpectrumAdditionalDataJson(Path.Join(BaseFolderPath, selectedData.Omega01AndOmega12File))
-                    .Omega12ValueReal;
+                    .ReadSpectrumAdditionalDataJson(Path.Join(BaseFolderPath, selectedData.Omega01AndHalfOmega02File))
+                    .HalfOmega02ValueReal;
                 if (indexList.Count != valueReal.Count)
                 {
                     throw new Exception($"Inconsistent length of horizontal and vertical Omega01 data with Id: {id}");
@@ -599,25 +598,25 @@ CREATE TABLE IF NOT EXISTS SpectrumTable(
                         "Omega01Index",
                         JsonService.SpectrumJsonService
                             .ReadSpectrumAdditionalDataJson(Path.Join(BaseFolderPath,
-                                selectedData.Omega01AndOmega12File)).Omega01Index
+                                selectedData.Omega01AndHalfOmega02File)).Omega01Index
                     },
                     {
                         "Omega01ValueReal",
                         JsonService.SpectrumJsonService
                             .ReadSpectrumAdditionalDataJson(Path.Join(BaseFolderPath,
-                                selectedData.Omega01AndOmega12File)).Omega01ValuReal
+                                selectedData.Omega01AndHalfOmega02File)).Omega01ValueReal
                     },
                     {
-                        "Omega12Index",
+                        "HalfOmega02Index",
                         JsonService.SpectrumJsonService
                             .ReadSpectrumAdditionalDataJson(Path.Join(BaseFolderPath,
-                                selectedData.Omega01AndOmega12File)).Omega12Index
+                                selectedData.Omega01AndHalfOmega02File)).HalfOmega02Index
                     },
                     {
-                        "Omega12ValueReal",
+                        "HalfOmega02ValueReal",
                         JsonService.SpectrumJsonService
                             .ReadSpectrumAdditionalDataJson(Path.Join(BaseFolderPath,
-                                selectedData.Omega01AndOmega12File)).Omega12ValueReal
+                                selectedData.Omega01AndHalfOmega02File)).HalfOmega02ValueReal
                     },
                 };
             }
@@ -650,6 +649,20 @@ CREATE TABLE IF NOT EXISTS SpectrumTable(
                     selectedData.IsWrongData = true;
                     selectedData.IsFilled = true;
                     selectedData.IsUseful = false;
+                    DateTime now = DateTime.Now;
+                    string formattedDateTime = now.ToString("yyyy-MM-dd HH:mm:ss");
+                    DateTime parsedDateTime;
+                    bool parseSuccess = DateTime.TryParseExact(
+                        formattedDateTime,
+                        "yyyy-MM-dd HH:mm:ss",
+                        System.Globalization.CultureInfo.InvariantCulture,
+                        System.Globalization.DateTimeStyles.None,
+                        out parsedDateTime
+                        );
+                    if (parseSuccess)
+                    {
+                        selectedData.MarkTime = parsedDateTime;
+                    }
                     SciDB?.SaveChanges();
                 }
                 else
@@ -659,9 +672,23 @@ CREATE TABLE IF NOT EXISTS SpectrumTable(
                     string additionalDataFilePath =
                         SpectrumJsonService.WriteSpectrumAdditionalDataJson(BaseFolderPath, relativeFileDir,
                             spectrumAdditionalData);
-                    selectedData.Omega01AndOmega12File = additionalDataFilePath;
+                    selectedData.Omega01AndHalfOmega02File = additionalDataFilePath;
                     selectedData.IsFilled = true;
                     selectedData.IsUseful = isUseful;
+                    DateTime now = DateTime.Now;
+                    string formattedDateTime = now.ToString("yyyy-MM-dd HH:mm:ss");
+                    DateTime parsedDateTime;
+                    bool parseSuccess = DateTime.TryParseExact(
+                        formattedDateTime,
+                        "yyyy-MM-dd HH:mm:ss",
+                        System.Globalization.CultureInfo.InvariantCulture,
+                        System.Globalization.DateTimeStyles.None,
+                        out parsedDateTime
+                    );
+                    if (parseSuccess)
+                    {
+                        selectedData.MarkTime = parsedDateTime;
+                    }
                     SciDB?.SaveChanges();
                 }
             }

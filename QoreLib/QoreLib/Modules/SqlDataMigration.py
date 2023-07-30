@@ -63,7 +63,7 @@ def LoadDataAndSaveToSql(idValue, result, typeValue, basePath, destinationDbCurs
         existingData = destinationDbCursor.fetchone()
 
         if existingData is None:
-            insertQuery = f"INSERT INTO SpectrumTable (GroupId, DataFile, APP, Type, Name, IsFilled, CreateTime, AlterTime) VALUES ({groupId}, '{dataFileRelativePath}', '{app}', '{type}', '{name}', {isFilled}, '{createTime}', '{alterTime}')"
+            insertQuery = f"INSERT INTO SpectrumTable (GroupId, DataFile, APP, Type, Name, IsFilled, CreateTime) VALUES ({groupId}, '{dataFileRelativePath}', '{app}', '{type}', '{name}', {isFilled}, '{createTime}')"
             destinationDbCursor.execute(insertQuery)
 
 

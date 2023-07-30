@@ -27,11 +27,12 @@ public class SpectrumJsonService : JsonServiceBase
     public static string WriteSpectrumAdditionalDataJson(string baseDir, string additionalRelativeDataFileDir,
         SpectrumAdditionalDataModel additionalData)
     {
-        string relativeDatafilePath = Path.Join(additionalRelativeDataFileDir, "SpectrumAdditionalData.json");
+        string relativeDatafilePath = Path.Combine(additionalRelativeDataFileDir, "SpectrumAdditionalData.json");
         string datafilePath = Path.Join(baseDir, relativeDatafilePath);
         string jsonString =
             JsonSerializer.Serialize(additionalData, new JsonSerializerOptions { WriteIndented = true });
         File.WriteAllText(datafilePath, jsonString);
-        return relativeDatafilePath;
+        string returnedRelativeDataFilePath = relativeDatafilePath.Replace('\\', '/');
+        return returnedRelativeDataFilePath;
     }
 }

@@ -103,7 +103,7 @@
                                                 Background="BlueViolet">
                                         </Border>
                                         <TextBlock VerticalAlignment="Center">
-                                            ω12
+                                            0.5ω02
                                         </TextBlock>
                                     </StackPanel>
                                 </RadioButton>

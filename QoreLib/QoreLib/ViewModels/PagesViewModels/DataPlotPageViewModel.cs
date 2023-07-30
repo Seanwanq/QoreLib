@@ -24,7 +24,10 @@ public partial class DataPlotPageViewModel : PageViewModelBase
     [ObservableProperty] private bool _isW01Selected = true;
     [ObservableProperty] private bool _isW12Selected = false;
     [ObservableProperty] private bool _isPageBanned = true;
-    [ObservableProperty] private bool _isDataBad = false;
+
+    [ObservableProperty] [NotifyCanExecuteChangedFor(nameof(CheckOKCommand))]
+    private bool _isDataBad = false;
+
     [ObservableProperty] private int _id = 0;
     public static int ExposedId;
     [ObservableProperty] private int _displayGroupId;
@@ -40,13 +43,18 @@ public partial class DataPlotPageViewModel : PageViewModelBase
     [NotifyCanExecuteChangedFor(nameof(CheckOKCommand))]
     private bool _isEditable = true;
 
-    [ObservableProperty] private bool _isDataUseful = true;
+    [ObservableProperty] [NotifyCanExecuteChangedFor(nameof(CheckOKCommand))]
+    private bool _isDataUseful = true;
+
     [ObservableProperty] private bool _isPlotSheltered = true;
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(SubmitCommand))]
     [NotifyCanExecuteChangedFor(nameof(CheckOKCommand))]
     private bool _isOK = false;
+
+    [ObservableProperty] [NotifyCanExecuteChangedFor(nameof(CheckOKCommand))]
+    private bool _isPlotted = false;
 
     partial void OnIsW01SelectedChanged(bool value)
     {
@@ -69,6 +77,8 @@ public partial class DataPlotPageViewModel : PageViewModelBase
     {
         if (value > 0)
         {
+            IsDataBad = false;
+            IsDataUseful = true;
             ExposedId = Id;
             DisplayGroupId = _databaseService!.GetSpectrumDataGroupIdById(Id);
             DisplayName = _databaseService.GetSpectrumDataNameById(Id);
@@ -88,7 +98,7 @@ public partial class DataPlotPageViewModel : PageViewModelBase
             {
                 IsDataUseful = true;
             }
-            
+
             IsW01Selected = true;
         }
     }
@@ -115,19 +125,54 @@ public partial class DataPlotPageViewModel : PageViewModelBase
     [RelayCommand(CanExecute = nameof(IsClearPointsButtonEnabled))]
     private void ClearPoints()
     {
+        IsDataBad = false;
+        IsDataUseful = true;
         ChartViewModel.ClearPoints();
     }
 
     // private bool IsCheckOkButtonEnabled() => (!IsOK && IsEditable);
     private bool IsCheckOkButtonEnabled()
     {
+        // if (IsFilled)
+        // {
+        //     return !IsOK && IsEditable;
+        // }
+        // else
+        // {
+        //     return !IsOK;
+        // }
         if (IsFilled)
         {
-            return !IsOK && IsEditable;
+            if (IsEditable)
+            {
+                if (IsDataBad)
+                {
+                    return !IsOK;
+                }
+                else
+                {
+                    return !IsOK && (IsPlotted || !IsDataUseful);
+                }
+            }
+            else
+            {
+                return false;
+            }
         }
         else
         {
-            return !IsOK;
+            if (IsDataBad)
+            {
+                return !IsOK;
+            }
+            if (IsDataUseful)
+            {
+                return !IsOK && IsPlotted;
+            }
+            else
+            {
+                return !IsOK;
+            }
         }
     }
 
@@ -154,6 +199,8 @@ public partial class DataPlotPageViewModel : PageViewModelBase
             ((r, m) => r.IsDataBad = !m.Value));
         Messenger.Register<DataPlotPageViewModel, ValueChangedMessage<bool>, string>(this, "isplotoksendchannel",
             (r, m) => r.IsOK = m.Value);
+        Messenger.Register<DataPlotPageViewModel, ValueChangedMessage<bool>, string>(this, "isplottedchannel",
+            (r, m) => r.IsPlotted = m.Value);
     }
 
     private void OnDatabaseConnectedChanged(bool isConnected)
@@ -275,9 +322,10 @@ public partial class DataPlotPageViewModel : PageViewModelBase
     {
         try
         {
-            var previousUnfilledId = _databaseService.GetSpectrumDataPreviousId(Id);
+            var previousUnfilledId = _databaseService.GetSpectrumDataPreviousUnfilledId(Id);
             if (previousUnfilledId == -2)
             {
+                Id = _databaseService.GetSpectrumDataFirstDataId();
                 WeakReferenceMessenger.Default.Send(
                     new ValueChangedMessage<NotificationModel>(new NotificationModel
                     {

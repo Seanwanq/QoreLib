@@ -22,11 +22,6 @@ namespace QoreLib.Views.Controls;
 
 public partial class ChartControl : UserControl
 {
-    private Axis yAxis = new Axis
-    {
-        MaxLimit = 10,
-        MinLimit = 0
-    };
     public ChartControl()
     {
         InitializeComponent();

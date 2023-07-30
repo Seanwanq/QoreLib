@@ -107,8 +107,8 @@ public partial class ChartViewModel : ViewModelBase
     private static double MaxXAxis { get; set; } = 0;
     private static List<double> Omega01Index { get; set; } = new();
     private static List<double> Omega01ValueReal { get; set; } = new();
-    private static List<double> Omega12Index { get; set; } = new();
-    private static List<double> Omega12ValueReal { get; set; } = new();
+    private static List<double> HalfOmega02Index { get; set; } = new();
+    private static List<double> HalfOmega02ValueReal { get; set; } = new();
     private static SpectrumAdditionalDataModel AdditionalData { get; set; } = new();
     private static bool _isFilled = false;
     private static bool IsFilled
@@ -156,6 +156,24 @@ public partial class ChartViewModel : ViewModelBase
         }
     }
 
+    private static bool _isPlotted = false;
+
+    private static bool IsPlotted
+    {
+        get => _isPlotted;
+        set
+        {
+            if(_isPlotted == value) return;
+            _isPlotted = value;
+            OnIsPlottedChanged(value);
+        }
+    }
+
+    private static void OnIsPlottedChanged(bool value)
+    {
+        WeakReferenceMessenger.Default.Send(new ValueChangedMessage<bool>(value), "isplottedchannel");
+    }
+
     public static void AddPoint(ChartControl chartControl, object? sender, Avalonia.Input.PointerPressedEventArgs e)
     {
         var chart = chartControl.FindControl<CartesianChart>("Chart");
@@ -174,12 +192,13 @@ public partial class ChartViewModel : ViewModelBase
         }
         else
         {
-            Omega12Index.Add(x);
-            Omega12ValueReal.Add(y);
+            HalfOmega02Index.Add(x);
+            HalfOmega02ValueReal.Add(y);
             W12Points.Add(new ObservablePoint(x, y));
         }
 
         IsOK = false;
+        IsPlotted = true;
     }
 
     private static void OnIsDatabaseConnectedChanged(bool value)
@@ -320,11 +339,11 @@ public partial class ChartViewModel : ViewModelBase
             if (IsFilled)
             {
                 W01Points.AddRange(_databaseService.SelectSpectrumOmega01DataToObservableCollectionById(id));
-                W12Points.AddRange(_databaseService.SelectSpectrumOmega12DataToObservableCollectionById(id));
+                W12Points.AddRange(_databaseService.SelectSpectrumHalfOmega02DataToObservableCollectionById(id));
                 Omega01Index.AddRange(_databaseService.SelectSpectrumAdditionalToDictionaryListDoubleById(id)["Omega01Index"]);
                 Omega01ValueReal.AddRange(_databaseService.SelectSpectrumAdditionalToDictionaryListDoubleById(id)["Omega01ValueReal"]);
-                Omega12Index.AddRange(_databaseService.SelectSpectrumAdditionalToDictionaryListDoubleById(id)["Omega12Index"]);
-                Omega12ValueReal.AddRange(_databaseService.SelectSpectrumAdditionalToDictionaryListDoubleById(id)["Omega12ValueReal"]);
+                HalfOmega02Index.AddRange(_databaseService.SelectSpectrumAdditionalToDictionaryListDoubleById(id)["HalfOmega02Index"]);
+                HalfOmega02ValueReal.AddRange(_databaseService.SelectSpectrumAdditionalToDictionaryListDoubleById(id)["HalfOmega02ValueReal"]);
             }
         }
 
@@ -361,9 +380,9 @@ public partial class ChartViewModel : ViewModelBase
         AdditionalData.Name = _databaseService.GetSpectrumDataNameById(DataId);
         AdditionalData.ValueType = _databaseService.GetSpectrumDataAppAndTypeById(DataId)["Type"];
         AdditionalData.Omega01Index = Omega01Index;
-        AdditionalData.Omega01ValuReal = Omega01ValueReal;
-        AdditionalData.Omega12Index = Omega12Index;
-        AdditionalData.Omega12ValueReal = Omega12ValueReal;
+        AdditionalData.Omega01ValueReal = Omega01ValueReal;
+        AdditionalData.HalfOmega02Index = HalfOmega02Index;
+        AdditionalData.HalfOmega02ValueReal = HalfOmega02ValueReal;
     }
 
     public static void SubmitCommand()
@@ -386,9 +405,10 @@ public partial class ChartViewModel : ViewModelBase
         W12Points.Clear();
         Omega01Index.Clear();
         Omega01ValueReal.Clear();
-        Omega12Index.Clear();
-        Omega12ValueReal.Clear();
+        HalfOmega02Index.Clear();
+        HalfOmega02ValueReal.Clear();
         AdditionalData.Clear();
         IsOK = false;
+        IsPlotted = false;
     }
 }
